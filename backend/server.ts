@@ -48,7 +48,7 @@ app.get('/boards/:id', boardExists(true), async (req, res) => {
 });
 
 // Process card lock requests
-app.post("/card/:id/lock", authorize, cardExists(true), async (req, res) => {
+app.post("/cards/:id/lock", authorize, cardExists(true), async (req, res) => {
 
     if (req.card.lockedBy !== null) {
         res.status(423).send("This card is already locked")
@@ -65,20 +65,25 @@ app.post("/card/:id/lock", authorize, cardExists(true), async (req, res) => {
 
     // TODO: notify clients about lock
 
-    res.status(100).send("Awaiting PUT /cards/:id request...") 
+    console.log("kotnuine")
+
+    res.status(200).send("Awaiting PUT /cards/:id request...") 
 })
 
 // Create/Edit a card
 app.put("/cards/:id", authorize, cardExists(), async (req, res) => {
-    if (req.body === undefined || !("content" in req.body && "columnId" in req.body)) {
+    if (req.body === undefined || !("content" in req.body)) {
         res.status(400).send("Incomplete request body.")
         return
     }
 
     // Card creation
     if (!req.cardExists) {
-        console.log("created")
-        prisma.task.create({
+        if ("columnId" in req.body) {
+            res.status(400).send("Incomplete request body.")
+            return
+        }
+        await prisma.task.create({
             data: {
                 id: req.cardId,
                 order: 0,
@@ -97,7 +102,6 @@ app.put("/cards/:id", authorize, cardExists(), async (req, res) => {
         return
     }
 
-    console.log("updated")
     await prisma.task.update({
         where: { id: req.cardId },
         data: { 
@@ -116,17 +120,17 @@ app.put("/cards/:id", authorize, cardExists(), async (req, res) => {
 // Add tag/move card to another column
 app.patch("/cards/:id", cardExists(true), async (req, res) => {
     try {
-        if (req.body["completed"] !== null)
+        if (req.body["completed"] !== undefined)
         {
-            prisma.task.update({
+            await prisma.task.update({
                 where: { id: req.cardId },
                 data: { completed: zod.boolean().parse(req.body["completed"]) }
             });
         }
 
-        if (req.body["columnId"] !== null)
+        if (req.body["columnId"] !== undefined)
         {
-            prisma.task.update({
+            await prisma.task.update({
                 where: { id: req.cardId },
                 data: { columnId: zod.string().parse(req.body["columnId"]) }
             });
@@ -149,7 +153,7 @@ app.delete("/cards/:id", authorize, cardExists(true), async (req, res) => {
         return
     }
 
-    prisma.task.delete({
+    await prisma.task.delete({
         where: { id: req.cardId }
     })
 
@@ -171,7 +175,7 @@ app.post("/cards/:id/tag", cardExists(true), async (req, res) => {
         create: { title: req.body["title"] }
     })
 
-    prisma.task.update({
+    await prisma.task.update({
         where: { id: req.cardId },
         data: {
             tags: {
@@ -190,7 +194,7 @@ app.delete("/cards/:id/tag", cardExists(true), async (req, res) => {
         return
     }
 
-    prisma.task.update({
+    await prisma.task.update({
         where: { id: req.cardId },
         data: {
             tags: {
@@ -198,6 +202,8 @@ app.delete("/cards/:id/tag", cardExists(true), async (req, res) => {
             }
         }
     })
+
+    res.status(204).send()
 })
 
 // Create list
@@ -207,7 +213,7 @@ app.post("/lists/:id", listExists(false), async (req, res) => {
         return
     }
 
-    prisma.column.create({
+    await prisma.column.create({
         data: {
             id: req.listId,
             title: req.body["title"],
@@ -221,7 +227,7 @@ app.post("/lists/:id", listExists(false), async (req, res) => {
 
 // Delete list
 app.delete("/lists/:id", listExists(true), async (req, res) => {
-    prisma.column.delete({
+    await prisma.column.delete({
         where: { id: req.listId }
     })
 
@@ -235,7 +241,7 @@ app.post("/boards/:id", boardExists(false), async (req, res) => {
         return
     }
 
-    prisma.board.create({
+    await prisma.board.create({
         data: {
             id: req.boardId,
             title: req.body["title"]
@@ -247,7 +253,7 @@ app.post("/boards/:id", boardExists(false), async (req, res) => {
 
 // Delete board
 app.delete("/boards/:id", boardExists(true), async (req, res) => {
-    prisma.board.delete({
+    await prisma.board.delete({
         where: { id: req.boardId }
     })
 

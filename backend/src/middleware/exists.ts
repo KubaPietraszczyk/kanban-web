@@ -20,7 +20,7 @@ const cardExists = (require: boolean | null = null) => async (req: Request, res:
         return
     } 
 
-    if ((require === null) && req.cardExists) {
+    if ((require === false) && req.cardExists) {
         res.status(400).send("Card with a given ID already exists.")
         return
     }
