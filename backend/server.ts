@@ -2,14 +2,16 @@ import "dotenv/config";
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { PrismaClient } from './generated/prisma/index.js';
 import cors from 'cors';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
 
-const pool = new Pool({ connectionString: process.env["DATABASE_URL"] });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+import prisma from "./src/lib/prisma.js";
+
+import authorize from './src/middleware/authorize.js'
+import { cardExists, listExists } from "./src/middleware/exists.js";
+
+
+
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -22,8 +24,11 @@ const io = new Server(httpServer, {
 app.use(cors());
 app.use(express.json());
 
-// 1. Pobieranie wszystkich tablic (razem z kolumnami i zadaniami)
-app.get('/boards', async (req, res) => {
+
+// TODO: notify clients after each change
+
+// Return the entire board ( with every list and task )
+app.get('/board', async (req, res) => {
     try {
         const boards = await prisma.board.findMany({
             include: {
@@ -41,78 +46,92 @@ app.get('/boards', async (req, res) => {
     }
 });
 
-// 2. Dodawanie nowej tablicy (na próbę)
-app.post('/boards', async (req, res) => {
-    const { title } = req.body;
-    try {
-        const newBoard = await prisma.board.create({
-            data: { title },
-        });
-        res.json(newBoard);
-    } catch (error) {
-        res.status(500).json({ error: "Nie udało się stworzyć tablicy" });
+// Process card lock requests
+app.post("/card/:id/lock", authorize, cardExists(true), async (req, res) => {
+    const cardId = req.params["id"]
+
+    if (req.card.lockedBy !== null) {
+        res.status(423).send("This card is already locked")
+        return
     }
-});
 
-io.on('connection', (socket) => {
-    console.log('⚡ User connected:', socket.id);
-
-    socket.on('task:locked', async (taskId) => {
-        try {
-            await prisma.task.update({
-                where: { id: taskId },
-                data: { lockedBy: socket.id, lockedAt: new Date() }
-            });
-            socket.broadcast.emit('task:locked', { taskId, lockedBy: socket.id });
-        } catch (error) {
-            console.error("Task lock error:", error);
+    await prisma.task.update({
+        where: { id: cardId },
+        data: {
+            lockedAt: new Date(),
+            lockedBy: req.clientId
         }
-    });
+    })
 
-    socket.on('task:unlocked', async (taskId) => {
-        try {
-            await prisma.task.update({
-                where: { id: taskId },
-                data: { lockedBy: null, lockedAt: null }
-            });
-            socket.broadcast.emit('task:unlocked', { taskId });
-        } catch (error) {
-            console.error("Task unlock error:", error);
+    // TODO: notify clients about lock
+
+    res.status(100).send("Awaiting PUT /cards/:id request...") 
+})
+
+// Create/Edit a card
+app.put("/cards/:id", authorize, cardExists(false), async (req, res) => {
+    if (req.body === undefined || !("content" in req.body && "columnId" in req.body)) {
+        res.status(400).send("Incomplete request body.")
+        return
+    }
+
+    // Card creation
+    if (!req.cardExists) {
+        console.log("created")
+        prisma.task.create({
+            data: {
+                id: req.cardId,
+                order: 0, // ? TODO
+                content: req.body["content"],
+                columnId: req.body["columnId"]
+            }
+        })
+        res.status(201).send()
+
+        return
+    }
+
+    // Card editing
+    if (req.card.lockedBy !== null && req.card.lockedBy !== req.clientId) {
+        res.status(423).send("This card is currently being edited by another user.")
+        return
+    }
+
+    console.log("updated")
+    await prisma.task.update({
+        where: { id: req.cardId },
+        data: { 
+            content: req.body["content"],
+            lockedBy: null    
         }
-    });
 
-    socket.on('task:moved', async (data) => {
-        try {
-            await prisma.task.update({
-                where: { id: data.taskId },
-                data: {
-                    columnId: data.newColumnId,
-                    order: data.newOrder,
-                    lockedBy: null,
-                    lockedAt: null
-                }
-            });
-            socket.broadcast.emit('task:moved', data);
-        } catch (error) {
-            console.error("Task move error:", error);
-        }
-    });
+    })
 
-    socket.on('disconnect', async () => {
-        console.log(' User disconnected:', socket.id);
-        try {
-            await prisma.task.updateMany({
-                where: { lockedBy: socket.id },
-                data: { lockedBy: null, lockedAt: null }
-            });
-            socket.broadcast.emit('task:unlocked_all', { socketId: socket.id });
-        } catch (error) {
-            console.error("Disconnect cleanup error:", error);
-        }
-    });
-});
+    // TODO: notify clients that the card is available to edit
+    // TODO: handle user disconnection while editing
+    
+    res.status(200).send()
+})
 
-const PORT = 3001;
+// Delete card
+app.delete("/cards/:id", authorize, cardExists(true), async (req, res) => {
+    const cardId = req.params["id"]
+
+    if (req.card.lockedBy !== null && req.card.lockedBy !== req.clientId) {
+        res.status(423).send("This card is currently being edited by another user.")
+        return
+    }
+
+    prisma.task.delete({
+        where: { id: cardId }
+    })
+
+    res.status(204).send()
+})
+
+
+
+const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
     console.log(`🚀 Serwer działa z obsługą Socket.io na http://localhost:${PORT}`);
 });
