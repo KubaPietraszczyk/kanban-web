@@ -90,11 +90,12 @@ app.get('/boards', authMiddleware, async (req, res) => {
         let boards = await prisma.board.findMany({
             include: {
                 lists: {
-                    include: { cards: true },
+                    include: { cards: { orderBy: { order: 'asc' } } },
                     orderBy: { order: 'asc' },
                 },
             },
         });
+        
         // Create default board if none exists
         if (boards.length === 0) {
             const newBoard = await prisma.board.create({
@@ -103,6 +104,17 @@ app.get('/boards', authMiddleware, async (req, res) => {
             });
             boards = [newBoard];
         }
+
+        // Ensure Telemetry list exists for the first board
+        const mainBoard = boards[0];
+        if (mainBoard && !mainBoard.lists.find((l: any) => l.type === 'TELEMETRY')) {
+            const telList = await prisma.list.create({
+                data: { title: "Telemetria", boardId: mainBoard.id, order: mainBoard.lists.length, type: "TELEMETRY" },
+                include: { cards: true }
+            });
+            mainBoard.lists.push(telList);
+        }
+
         res.json(boards);
     } catch (error) {
         res.status(500).json({ error: "Error fetching boards" });
@@ -110,11 +122,11 @@ app.get('/boards', authMiddleware, async (req, res) => {
 });
 
 app.post('/api/lists', authMiddleware, async (req, res) => {
-    const { title, boardId } = req.body;
+    const { title, boardId, type } = req.body;
     try {
         const count = await prisma.list.count({ where: { boardId } });
         const list = await prisma.list.create({
-            data: { title, boardId, order: count }
+            data: { title, boardId, order: count, type: type || "DEFAULT" }
         });
         io.emit('board:updated');
         res.json(list);
@@ -124,16 +136,74 @@ app.post('/api/lists', authMiddleware, async (req, res) => {
 });
 
 app.post('/api/cards', authMiddleware, async (req, res) => {
-    const { content, listId } = req.body;
+    const { content, listId, tags } = req.body;
     try {
         const count = await prisma.card.count({ where: { listId } });
         const card = await prisma.card.create({
-            data: { content, listId, order: count }
+            data: { content, listId, order: count, tags: tags || [] }
         });
         io.emit('board:updated');
         res.json(card);
     } catch (e) {
         res.status(500).json({ error: "Failed to create card" });
+    }
+});
+
+app.put('/api/lists/:id', authMiddleware, async (req, res) => {
+    const { title } = req.body;
+    try {
+        const list = await prisma.list.update({ where: { id: req.params.id as string }, data: { title } });
+        io.emit('board:updated');
+        res.json(list);
+    } catch (e) {
+        res.status(500).json({ error: "Failed to update list" });
+    }
+});
+
+app.delete('/api/lists/:id', authMiddleware, async (req, res) => {
+    try {
+        await prisma.list.delete({ where: { id: req.params.id as string } });
+        io.emit('board:updated');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: "Failed to delete list" });
+    }
+});
+
+app.put('/api/cards/:id', authMiddleware, async (req, res) => {
+    const { content, description, isDone, tags } = req.body;
+    try {
+        const existing = await prisma.card.findUnique({ where: { id: req.params.id as string }});
+        let completedAt = existing?.completedAt;
+        if (isDone !== undefined) {
+             if (isDone && !existing?.isDone) completedAt = new Date();
+             if (!isDone && existing?.isDone) completedAt = null;
+        }
+
+        const data: any = {};
+        if (content !== undefined) data.content = content;
+        if (description !== undefined) data.description = description;
+        if (tags !== undefined) data.tags = tags;
+        if (isDone !== undefined) {
+             data.isDone = isDone;
+             data.completedAt = completedAt;
+        }
+
+        const card = await prisma.card.update({ where: { id: req.params.id as string }, data });
+        io.emit('board:updated');
+        res.json(card);
+    } catch (e) {
+        res.status(500).json({ error: "Failed to update card" });
+    }
+});
+
+app.delete('/api/cards/:id', authMiddleware, async (req, res) => {
+    try {
+        await prisma.card.delete({ where: { id: req.params.id as string } });
+        io.emit('board:updated');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: "Failed to delete card" });
     }
 });
 
@@ -165,20 +235,40 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('card:moved', async (data) => {
+    socket.on('cards:reordered', async (items) => {
         try {
-            await prisma.card.update({
-                where: { id: data.cardId },
-                data: {
-                    listId: data.newListId,
-                    order: data.newOrder,
-                    lockedBy: null,
-                    lockedAt: null
-                }
-            });
-            socket.broadcast.emit('card:moved', data);
+            await prisma.$transaction(
+                items.map((item: any) =>
+                    prisma.card.update({
+                        where: { id: item.id },
+                        data: {
+                            listId: item.listId,
+                            order: item.order,
+                            lockedBy: null,
+                            lockedAt: null
+                        }
+                    })
+                )
+            );
+            socket.broadcast.emit('board:updated');
         } catch (error) {
-            console.error("Card move error:", error);
+            console.error("Cards reorder error:", error);
+        }
+    });
+
+    socket.on('lists:reordered', async (items) => {
+        try {
+            await prisma.$transaction(
+                items.map((item: any) =>
+                    prisma.list.update({
+                        where: { id: item.id },
+                        data: { order: item.order }
+                    })
+                )
+            );
+            socket.broadcast.emit('board:updated');
+        } catch (error) {
+            console.error("Lists reorder error:", error);
         }
     });
 

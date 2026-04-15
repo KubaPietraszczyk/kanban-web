@@ -25,6 +25,7 @@ model List {
   id      String @id @default(uuid())
   title   String
   order   Int
+  type    String @default("DEFAULT")
   board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId String
   cards   Card[]
@@ -33,6 +34,11 @@ model List {
 model Card {
   id         String   @id @default(cuid())
   content    String
+  description String?
+  isDone     Boolean  @default(false)
+  tags       String[] @default([])
+  createdAt  DateTime @default(now())
+  completedAt DateTime?
   order      Int
   listId     String
   list       List     @relation(fields: [listId], references: [id], onDelete: Cascade)
