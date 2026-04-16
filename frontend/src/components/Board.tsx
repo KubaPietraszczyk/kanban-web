@@ -15,7 +15,9 @@ import { List } from "./List";
 import { Card as CardComp } from "./Card";
 import { CardModal } from "./CardModal";
 import type { BoardType, Card, ListType } from "../types";
-import { LogOut, Plus, Search, LayoutGrid, X, ArrowDownUp, Filter, MoreHorizontal, List as ListIcon, TrendingUp } from "lucide-react";
+import { LogOut, Search, LayoutGrid, X, ArrowDownUp, Filter, MoreHorizontal, List as ListIcon, TrendingUp } from "lucide-react";
+
+import { UserSettings } from "./UserSettings";
 
 let socket: Socket;
 
@@ -265,10 +267,9 @@ export function Board({ token, onLogout }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-4">
-           <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-sm overflow-hidden border border-slate-600 shadow-sm opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
-               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${board?.title || "user"}`} alt="avatar" />
-           </div>
+           <UserSettings board={board} />
         </div>
+        
       </nav>
 
       {/* Header Context Action Bar */}
