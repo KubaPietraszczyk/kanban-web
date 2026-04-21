@@ -26,6 +26,7 @@ function CardModal({ t, i18n, card, token, onClose, onUpdate, socket, lists }: P
   
   const [isSaving, setIsSaving] = useState(false);
   const tagDropRef = useRef<HTMLDivElement>(null);
+  const cardDescriptionRef = useRef(null)
 
   useEffect(() => {
     // Lock the card for editing for safety
@@ -50,6 +51,10 @@ function CardModal({ t, i18n, card, token, onClose, onUpdate, socket, lists }: P
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    cardDescriptionRef?.current.focus()
+  }, [])
 
   const handleAddTag = async (tagName: string) => {
       const name = tagName.trim();
@@ -152,7 +157,7 @@ function CardModal({ t, i18n, card, token, onClose, onUpdate, socket, lists }: P
                     {card.completedAt && <span className="text-emerald-400">{t("cardCompleted", {date: new Date(card.completedAt).toLocaleDateString()})}</span>}
                 </div>
             </div>
-            <button onClick={() => { handleSave(); onClose(); }} className="text-slate-400 hover:text-white transition-colors bg-slate-800 p-2 rounded-lg shrink-0">
+            <button aria-label={t("saveAndClose")} onClick={() => { handleSave(); onClose(); }} className="text-slate-400 hover:text-white transition-colors bg-slate-800 p-2 rounded-lg shrink-0">
                 <X size={20} />
             </button>
         </div>
@@ -167,6 +172,7 @@ function CardModal({ t, i18n, card, token, onClose, onUpdate, socket, lists }: P
                         {['Low', 'Medium', 'High'].map(p => (
                             <button
                                 key={p}
+                                aria-label={t("screenReaderSetCardPriority", {priority: p})}
                                 onClick={() => setPriority(p)}
                                 className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all border ${
                                     priority === p 
@@ -227,6 +233,7 @@ function CardModal({ t, i18n, card, token, onClose, onUpdate, socket, lists }: P
             <div className="flex flex-col gap-2 line-horizontal mt-2">
                 <label className="text-sm font-bold text-slate-300 uppercase tracking-wider">{t("cardContentTitle")}</label>
                 <textarea
+                    ref={cardDescriptionRef}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Dodaj więcej szczegółowych informacji do tego zadania..."

@@ -14,7 +14,7 @@ import {
 import List from "./List";
 import CardComp from "./Card";
 import CardModal from "./CardModal";
-import type { BoardType, Card, ListType } from "../types";
+import type { BoardActions, BoardType, Card, ListType } from "../types";
 import { LogOut, Search, LayoutGrid, X, ArrowDownUp, Filter, MoreHorizontal, List as ListIcon, TrendingUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -231,6 +231,7 @@ export function Board({ token, onLogout }: Props) {
       return;
     }
 
+    // handle drag & drop of a list
     if (active.data.current?.type === "List") {
       const activeId = String(active.id);
       const overId = String(over.id);
@@ -256,26 +257,17 @@ export function Board({ token, onLogout }: Props) {
     const activeCardData = active.data.current?.card as Card;
     const overDataType = over.data.current?.type;
 
-    const sourceListIndex = board.lists.findIndex(l => l.id === activeCardData.listId);
     let destListIndex = -1;
-    
+        
     if (overDataType === "List") {
       destListIndex = board.lists.findIndex(l => l.id === overId);
     } else if (overDataType === "Card") {
       const overCardData = over.data.current?.card as Card;
       destListIndex = board.lists.findIndex(l => l.id === overCardData.listId);
-    }
+    }    
 
-    if (sourceListIndex === -1 || destListIndex === -1 || board.lists[destListIndex].type !== "DEFAULT") {
-      socket.emit("card:unlocked", activeId);
-      return;
-    }
-
-    const sourceList = board.lists[sourceListIndex];
-    const destList = board.lists[destListIndex];
-
-    const oldIndex = sourceList.cards.findIndex(c => c.id === activeId);
     let newIndex = -1;
+    const destList = board.lists[destListIndex];
     
     if (overDataType === "List") {
       newIndex = destList.cards.length;
@@ -284,11 +276,66 @@ export function Board({ token, onLogout }: Props) {
       if (newIndex === -1) newIndex = destList.cards.length;
     }
 
+    moveCard(activeCard, destListIndex, newIndex);
+  };
+
+  const moveListByOffset = (listId: String, offset: number) => {
+    const oldIndex = board.lists.findIndex(l => l.id === listId);
+    const newIndex = oldIndex + offset;
+    if (newIndex < 0 || newIndex >= board.lists.length) return;
+
+    const updatedLists = arrayMove(board.lists, oldIndex, newIndex).map((l, i) => ({ ...l, order: i }));
+    setBoard({ ...board, lists: updatedLists });
+    socket.emit("lists:reordered", updatedLists.map(l => ({ id: l.id, order: l.order })));
+  }
+
+  const moveCardByOffset = (card: Card, listOffset: number, cardOffset: number) => {
+    const sourceListIndex = board.lists.findIndex(l => l.id === card.listId);
+
+    let destListIndex: number = sourceListIndex;
+
+    if (listOffset !== 0) {
+      for (let i = sourceListIndex + listOffset; 
+          i >= 0 && i < board.lists.length; 
+          i += Math.sign(listOffset)
+      ) {
+        if (board.lists[i].type === "DEFAULT") {
+          destListIndex = i;
+          break;
+        }
+      }
+    }
+
+    const destCardIndex = Math.max(0,card.order + cardOffset);
+
+    moveCard(card, destListIndex, destCardIndex)
+  }
+
+  const actions: BoardActions = {
+    moveListByOffset: moveListByOffset,
+    moveCardByOffset: moveCardByOffset
+  }
+
+  const moveCard = (card: Card, destListIndex: number, destCardIndex: number) => {
+    const cardId = card.id;
+    const sourceListIndex = board.lists.findIndex(l => l.id === card.listId);
+
+    if (sourceListIndex === -1 || destListIndex === -1 || board.lists[destListIndex].type !== "DEFAULT") {
+      socket.emit("card:unlocked", cardId);
+      return;
+    }
+
+    const sourceList = board.lists[sourceListIndex];
+    const destList = board.lists[destListIndex];
+
+    const oldIndex = sourceList.cards.findIndex(c => c.id === cardId);
+
+
     const p = { ...board, lists: [...board.lists] };
     let itemsToUpdate: {id: string, order: number, listId: string}[] = [];
 
     if (sourceListIndex === destListIndex) {
-      const updatedCards = arrayMove(sourceList.cards, oldIndex, newIndex).map((c, i) => ({ ...c, order: i }));
+      const updatedCards = arrayMove(sourceList.cards, oldIndex, destCardIndex).map((c, i) => ({ ...c, order: i }));
       p.lists[sourceListIndex] = { ...sourceList, cards: updatedCards };
       itemsToUpdate = updatedCards.map(c => ({ id: c.id, order: c.order, listId: c.listId }));
     } else {
@@ -296,7 +343,7 @@ export function Board({ token, onLogout }: Props) {
       const [movedCard] = sourceCards.splice(oldIndex, 1);
       
       const destCards = [...destList.cards];
-      destCards.splice(newIndex, 0, { ...movedCard, listId: destList.id });
+      destCards.splice(destCardIndex, 0, { ...movedCard, listId: destList.id });
       
       const updatedSource = sourceCards.map((c, i) => ({ ...c, order: i }));
       const updatedDest = destCards.map((c, i) => ({ ...c, order: i }));
@@ -313,7 +360,7 @@ export function Board({ token, onLogout }: Props) {
     setBoard(p);
 
     socket.emit("cards:reordered", itemsToUpdate);
-  };
+  }
 
   if (!board) {
     return (
@@ -428,6 +475,7 @@ export function Board({ token, onLogout }: Props) {
                     onOpenModal={setModalCard}
                     boardCards={board?.lists.flatMap(l => l.cards) || []}
                     allLists={board?.lists || []}
+                    actions={actions}
                   />
                 ))}
               </SortableContext>
@@ -435,7 +483,7 @@ export function Board({ token, onLogout }: Props) {
             <DragOverlay>
               {activeCard ? (
                 <div className="rotate-3 scale-105 transition-transform shadow-2xl shadow-[#3b82f6]/20">
-                  <CardComp card={activeCard} currentSocketId={currentUser?.userId} token={token} onUpdate={() => {}} onOpenModal={() => {}} />
+                  <CardComp card={activeCard} currentSocketId={currentUser?.userId} token={token} onUpdate={() => {}} onOpenModal={() => {}} actions={actions} />
                 </div>
               ) : activeList ? (
                 <div className="rotate-3 scale-105 transition-transform shadow-2xl opacity-80">
@@ -447,6 +495,7 @@ export function Board({ token, onLogout }: Props) {
                     onAddCard={() => {}} 
                     boardCards={board?.lists.flatMap(l => l.cards) || []}
                     allLists={board?.lists || []}
+                    actions={actions}
                   />
                 </div>
               ) : null}

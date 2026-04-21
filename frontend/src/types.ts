@@ -41,3 +41,8 @@ export interface User {
   email: string;
   name: string;
 }
+
+export interface BoardActions {
+  moveListByOffset: (listId: String, offset: number) => void;
+  moveCardByOffset: (card: Card, listOffset: number, cardOffset: number) => void;
+}

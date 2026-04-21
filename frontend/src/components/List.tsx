@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import CardComp from "./Card";
-import type { ListType, Card } from "../types";
+import type { ListType, Card, BoardActions } from "../types";
 import { Plus, Pencil, Trash, X, Check } from "lucide-react";
 import TelemetryColumn from "./TelemetryColumn";
 import { withTranslation } from "react-i18next";
@@ -19,13 +19,16 @@ interface Props {
   onOpenModal?: (card: Card) => void;
   boardCards?: Card[];
   allLists?: ListType[];
+  actions: BoardActions
 }
 
-function List({ t, i18n, list, cards, currentSocketId, token, onAddCard, onOpenModal, boardCards, allLists }: Props) {
+function List({ t, i18n, list, cards, currentSocketId, token, onAddCard, onOpenModal, boardCards, allLists, actions }: Props) {
   const [isAdding, setIsAdding] = useState(false);
   const [newCardContent, setNewCardContent] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(list.title);
+
+  const { moveListByOffset, moveCardByOffset } = actions;
 
   const { setNodeRef, isOver, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: list.id,
@@ -121,10 +124,10 @@ function List({ t, i18n, list, cards, currentSocketId, token, onAddCard, onOpenM
               onChange={(e) => setEditedTitle(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleUpdateTitle()}
             />
-            <button onClick={handleUpdateTitle} className="text-[#3bbaa8] hover:text-[#4fd1c5]">
+            <button aria-label={t("screenReaderConfirmTitle")} onClick={handleUpdateTitle} className="text-[#3bbaa8] hover:text-[#4fd1c5] focus:text-[#4fd1c5]">
                 <Check size={16} />
             </button>
-            <button onClick={() => { setIsEditingTitle(false); setEditedTitle(list.title); }} className="text-slate-400 hover:text-slate-200">
+            <button aria-label={t("screenReaderCancelTitle")} onClick={() => { setIsEditingTitle(false); setEditedTitle(list.title); }} className="text-slate-400 hover:text-slate-200 focus:text-slate-200">
                 <X size={16} />
             </button>
           </div>
@@ -139,11 +142,17 @@ function List({ t, i18n, list, cards, currentSocketId, token, onAddCard, onOpenM
                   {cards.length}
                 </span>
               </div>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                <button onClick={() => setIsEditingTitle(true)} className="text-[#24272c] hover:text-[#6082e6] transition-colors">
+              <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only" onClick={() => moveListByOffset(list.id, -1)}>
+                {t("screenReaderMoveListLeft")}
+              </button>
+              <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only" onClick={() => moveListByOffset(list.id, 1)}>
+                {t("screenReaderMoveListRight")}
+              </button>
+              <div className="opacity-60 group-hover:opacity-100 transition-opacity flex items-center gap-2">
+                <button aria-label={t("screenReaderEditListTitle")} onClick={() => setIsEditingTitle(true)} className="text-slate-400 hover:text-blue-500 focus:text-blue-500 transition-colors">
                     <Pencil size={14} />
                 </button>
-                <button onClick={handleDeleteList} className="text-[#24272c] hover:text-rose-400 transition-colors">
+                <button aria-label={t("screenReaderDeleteList")} onClick={handleDeleteList} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors">
                     <Trash size={14} />
                 </button>
               </div>
@@ -159,7 +168,7 @@ function List({ t, i18n, list, cards, currentSocketId, token, onAddCard, onOpenM
             <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 custom-scrollbar">
               <SortableContext items={cards.map(t => t.id)} strategy={verticalListSortingStrategy}>
                 {cards.map(card => (
-                  <CardComp key={card.id} card={card} currentSocketId={currentSocketId} token={token} onUpdate={onAddCard} onOpenModal={onOpenModal!} />
+                  <CardComp key={card.id} card={card} currentSocketId={currentSocketId} token={token} onUpdate={onAddCard} onOpenModal={onOpenModal!} actions={actions} />
                 ))}
               </SortableContext>
             </div>

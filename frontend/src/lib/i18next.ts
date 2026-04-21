@@ -65,6 +65,24 @@ const resources = {
             locked_actionable: "Actionable vs Locked",
             priority_split: "Priority Split",
             effort_distribution: "Effort Distribution (Tags)",
+
+            // accessibility
+            screenReaderMoveListLeft: "Move to the left",
+            screenReaderMoveListRight: "Move to the right",
+            screenReaderMoveCardLeft: "Move to the previous list",
+            screenReaderMoveCardRight: "Move to the next list",
+            screenReaderMoveCardUp: "Move up the list",
+            screenReaderMoveCardDown: "Move down the list",
+            screenReaderEditCardTitle: "Change card title",
+            screenReaderEditListTitle: "Change list title",
+            screenReaderConfirmTitle: "Confirm title change",
+            screenReaderCancelTitle: "Cancel title change",
+            screenReaderDeleteCard: "Delete card",
+            screenReaderDeleteList: "Delete list",
+            screenReaderEditCard: "Edit this card",
+            screenReaderSetCardPriority: "Set card priority as {{priority}}",
+            screenReaderOpenUserSettings: "Open user settings",
+            screenReaderCloseUserSettings: "Close user settings",
         }
     },
     pl: {
@@ -130,6 +148,24 @@ const resources = {
             locked_actionable: "Dostępne vs Zablokowane",
             priority_split: "Podział Priorytetów",
             effort_distribution: "Rozkład Wysiłku (Tagi)",
+
+            // accessibility
+            screenReaderMoveListLeft: "Przesuń w lewo",
+            screenReaderMoveListRight: "Przesuń w prawo",
+            screenReaderMoveCardLeft: "Przenieś do poprzedniej listy",
+            screenReaderMoveCardRight: "Przenieś do kolejnej listy",
+            screenReaderMoveCardUp: "Przesuń w górę listy",
+            screenReaderMoveCardDown: "Przesuń w dół listy",
+            screenReaderEditCardTitle: "Zmień tytuł karty",
+            screenReaderEditListTitle: "Zmień tytuł listy",
+            screenReaderConfirmTitle: "Zatwierdź zmianę tytułu",
+            screenReaderCancelTitle: "Anuluj zmianę tytułu",
+            screenReaderDeleteCard: "Usuń kartę",
+            screenReaderDeleteList: "Usun listę",
+            screenReaderEditCard: "Edytuj kartę",
+            screenReaderSetCardPriority: "Ustaw priorytet karty na {{priority}}",
+            screenReaderOpenUserSettings: "Otwórz ustawienia użytkownika",
+            screenReaderCloseUserSettings: "Zamknij ustawienia użytkownika",
         }
     }
 }

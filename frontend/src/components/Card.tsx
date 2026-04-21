@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Lock, Pencil, Trash, X, Check, ArrowUp, ArrowDown, Minus } from "lucide-react";
-import type { Card as CardType } from "../types";
+import type { BoardActions, Card as CardType } from "../types";
 import { withTranslation } from "react-i18next";
 
 interface Props {
@@ -13,13 +13,16 @@ interface Props {
   token: string;
   onUpdate: () => void;
   onOpenModal: (card: CardType) => void;
+  actions: BoardActions;
 }
 
-function Card({ t, i18n, card, currentSocketId, token, onUpdate, onOpenModal }: Props) {
+function Card({ t, i18n, card, currentSocketId, token, onUpdate, onOpenModal, actions }: Props) {
   // Task/Card jest zablokowany jeśli ma ustalone lockedBy i to lockedBy nie jest naszym socketID
   const isLockedByOther = card.lockedBy !== null && card.lockedBy !== currentSocketId;
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(card.content);
+
+  const moveCardByOffset = actions.moveCardByOffset;
 
   const handleUpdate = async () => {
     if (!editedContent.trim() || editedContent === card.content) {
@@ -111,12 +114,13 @@ function Card({ t, i18n, card, currentSocketId, token, onUpdate, onOpenModal }: 
   const dateTag = `[${String(dateObj.getDate()).padStart(2, '0')}.${String(dateObj.getMonth() + 1).padStart(2, '0')} - ${dateObj.toLocaleDateString("en-US", { weekday: "short" })}]`;
 
   return (
-    <div
+    <button
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...(isLockedByOther || isEditing ? {} : listeners)}
       onClick={() => !isLockedByOther && !isEditing && onOpenModal(card)}
+      aria-label={t("screenReaderEditCard")}
       className={`relative group flex flex-col p-4 rounded-lg shadow-sm border 
         ${isLockedByOther ? 'bg-[#1e1f24] border-slate-800 opacity-60 cursor-not-allowed' : card.isDone ? 'bg-[#15161a] border-[#22242b] opacity-80' : card.inProgress ? 'bg-[#291f13] border-[#a36214] opacity-90 cursor-grab' : 'bg-[#1e1f24] border-[#2a2d36] hover:border-[#3b82f6]/50 cursor-grab active:cursor-grabbing'}
         transition-all duration-200`}
@@ -132,10 +136,10 @@ function Card({ t, i18n, card, currentSocketId, token, onUpdate, onOpenModal }: 
             rows={3}
           />
           <div className="flex items-center gap-2 justify-end">
-            <button onClick={handleUpdate} className="text-[#3bbaa8] p-1 bg-[#15161a] border border-[#2a2d36] rounded hover:border-[#3bbaa8] transition-colors">
+            <button aria-label={t("screenReaderConfirmTitle")} onClick={handleUpdate} className="text-[#3bbaa8] p-1 bg-[#15161a] border border-[#2a2d36] rounded hover:border-[#3bbaa8] transition-colors">
               <Check size={14} />
             </button>
-            <button onClick={() => { setIsEditing(false); setEditedContent(card.content); }} className="text-slate-400 p-1 bg-[#15161a] border border-[#2a2d36] rounded hover:text-rose-400 transition-colors">
+            <button aria-label={t("screenReaderCancelTitle")} onClick={() => { setIsEditing(false); setEditedContent(card.content); }} className="text-slate-400 p-1 bg-[#15161a] border border-[#2a2d36] rounded hover:text-rose-400 transition-colors">
               <X size={14} />
             </button>
           </div>
@@ -192,7 +196,7 @@ function Card({ t, i18n, card, currentSocketId, token, onUpdate, onOpenModal }: 
           )}
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-auto pt-2 opacity-50 hover:opacity-100 transition-opacity">
+          <div className="flex justify-between items-center mt-auto pt-2">
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-700 border border-slate-600">
                 <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${card.id}`} alt="avatar" />
@@ -200,23 +204,39 @@ function Card({ t, i18n, card, currentSocketId, token, onUpdate, onOpenModal }: 
             </div>
             <div className="flex items-center gap-2">
               {!isLockedByOther && !card.isDone && (
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 mr-1" onClick={e => e.stopPropagation()}>
-                  <button onClick={() => setIsEditing(true)} className="text-slate-500 hover:text-blue-400 transition-colors p-1">
+                <div className="opacity-60 group-hover:opacity-100 transition-opacity flex gap-1 mr-1" onClick={e => e.stopPropagation()}>
+                  <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only"
+                    onClick={()=>moveCardByOffset(card,-1,0)}>
+                    {t("screenReaderMoveCardLeft")}
+                  </button>
+                  <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only"
+                    onClick={()=>moveCardByOffset(card,1,0)}>
+                    {t("screenReaderMoveCardRight")}
+                  </button>
+                  <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only"
+                    onClick={()=>moveCardByOffset(card,0,1)}>
+                    {t("screenReaderMoveCardDown")}
+                  </button>
+                  <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only"
+                    onClick={()=>moveCardByOffset(card,0,-1)}>
+                    {t("screenReaderMoveCardUp")}
+                  </button>
+                  <button aria-label={t("screenReaderEditCardTitle")} onClick={() => setIsEditing(true)} className="text-slate-400 hover:text-blue-500 focus:text-blue-500 transition-colors p-1">
                     <Pencil size={12} />
                   </button>
-                  <button onClick={handleDelete} className="text-slate-500 hover:text-rose-400 transition-colors p-1">
+                  <button aria-label={t("screenReaderDeleteCard")} onClick={handleDelete} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors p-1">
                     <Trash size={12} />
                   </button>
                 </div>
               )}
-              <span className="text-[9px] text-slate-500 font-medium">
+              <span className="text-[9px] text-slate-400 font-medium">
                 {card.completedAt ? t("cardCompleted", { date: new Date(card.completedAt).toLocaleDateString() }) : t("lastEdited", { count: "10" })} {/* TODO: hardcoded value */}
               </span>
             </div>
           </div>
         </>
       )}
-    </div>
+    </button>
   );
 }
 
