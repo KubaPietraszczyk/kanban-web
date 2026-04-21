@@ -266,7 +266,7 @@ export function Board({ token, onLogout }: Props) {
       destListIndex = board.lists.findIndex(l => l.id === overCardData.listId);
     }
 
-    if (sourceListIndex === -1 || destListIndex === -1) {
+    if (sourceListIndex === -1 || destListIndex === -1 || board.lists[destListIndex].type !== "DEFAULT") {
       socket.emit("card:unlocked", activeId);
       return;
     }
