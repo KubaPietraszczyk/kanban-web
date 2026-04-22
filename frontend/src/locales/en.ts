@@ -1,0 +1,85 @@
+const en = {
+    translation: {
+        // common
+        loadingWorkspace: "Loading workspace...",
+        dashboard: "Dashboard",
+        language: "Language:",
+        signIn: "Sign in",
+        signIn_long: "Sign in to your account",
+        signUp: "Sign up",
+        signOut: "Sign out",
+        userSettings: "User settings",
+        saveAndClose: "Save and close",
+        
+        // auth screen
+        email: "Email",
+        password: "Password",
+        createAccount: "Create a new account",
+        signInProposal: "Already have an account?",
+        signUpProposal: "Don't have an account?",
+    
+        // board view
+        navbarSearch: "Search tasks, projects, or people...",
+        addNewCard: "Add card",
+        addNewCardConfirm: "Add",
+        addNewCardCancel: "Cancel",
+        addNewColumn: "Add new column",
+        taskList: "Task List",
+        analyticsList: "Analytics List",
+        yearFilter: "Year: {{filter}}",
+        taskProgressFilter: "Task progress: {{filter}}",
+        statusFilter: "Status: {{filter}}",
+        cardCompleted: "Completed: {{date}}",
+        lastEdited: "Edited {{count}}m ago",
+        sort: "Sort",
+        moreFilters: "More filters",
+        taskTitleHint: "Enter task title...",
+        listDeletionConfirmation: "Do you really want to delete this list and all of its cards?",
+        cardDeletionConfirmation: "Do you really want to delete this card?",
+                
+        // card edit view
+        cardCreated: "Created: {{date}}",
+        cardContentTitle: "Task description",
+        cardContentHint: "Add a description for this task...",
+        markAsCompleted: "Mark as completed",
+        markAsInProgress: "Mark as in progress",
+        markAsToDo: "Mark as to-do",
+        
+        // analytics
+        chartValue: "value: {{value}}",
+        tagFrequency: "Tag frequency",
+        tagsChartTitle: "Tags",
+        noTags: "No tags",
+        statusCompleted: "Done",
+        statusInProgress: "In progress",
+        statusToDo: "To do",
+        lastWeek: "Last 7 days",
+        cardVelocity: "Card velocity",
+        statusBreakdown: "Status breakdown",
+        workload_distribution: "Workload Distribution",
+        card_aging: "Card Aging",
+        locked_actionable: "Actionable vs Locked",
+        priority_split: "Priority Split",
+        effort_distribution: "Effort Distribution (Tags)",
+
+        // accessibility
+        screenReaderMoveListLeft: "Move to the left",
+        screenReaderMoveListRight: "Move to the right",
+        screenReaderMoveCardLeft: "Move to the previous list",
+        screenReaderMoveCardRight: "Move to the next list",
+        screenReaderMoveCardUp: "Move up the list",
+        screenReaderMoveCardDown: "Move down the list",
+        screenReaderEditCardTitle: "Change card title",
+        screenReaderEditListTitle: "Change list title",
+        screenReaderConfirmTitle: "Confirm title change",
+        screenReaderCancelTitle: "Cancel title change",
+        screenReaderDeleteCard: "Delete card",
+        screenReaderDeleteList: "Delete list",
+        screenReaderEditCard: "Edit this card",
+        screenReaderSetCardPriority: "Set card priority as {{priority}}",
+        screenReaderOpenUserSettings: "Open user settings",
+        screenReaderCloseUserSettings: "Close user settings",
+    }
+}
+
+export default en

@@ -186,7 +186,7 @@ export function Board({ token, onLogout }: Props) {
 
   const fetchBoard = async () => {
     try {
-      const boardsRes = await fetch("http://localhost:3001/boards", {
+      const boardsRes = await fetch("http://localhost:3001/api/boards", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (boardsRes.status === 401) return onLogout();

@@ -1,0 +1,85 @@
+const pl = {
+    translation: {
+        // common
+        loadingWorkspace: "Ładowanie obszaru roboczego...",
+        dashboard: "Panel główny",
+        language: "Język:",
+        signOut: "Wyloguj się",
+        userSettings: "Ustawienia użytkownika",
+        signIn: "Zaloguj się",
+        signIn_long: "Zaloguj się na swoje konto",
+        signUp: "Zarejestruj się",
+        saveAndClose: "Zapisz i zamknij",
+        
+        // auth screen
+        email: "Adres mejlowy",
+        password: "Hasło",
+        createAccount: "Stwórz nowe konto",
+        signInProposal: "Masz już konto?",
+        signUpProposal: "Nie masz konta?",
+    
+        // board view
+        navbarSearch: "Szukaj zadań, projektów, osób...",
+        addNewCard: "Dodaj kartę",
+        addNewCardConfirm: "Dodaj",
+        addNewCardCancel: "Anuluj",
+        addNewColumn: "Dodaj nową listę",
+        taskList: "Lista zadań",
+        analyticsList: "Lista statystyk",
+        yearFilter: "Rok: {{filter}}",
+        taskProgressFilter: "Stan zadania: {{filter}}",
+        statusFilter: "Status: {{filter}}",
+        cardCompleted: "Ukończono: {{date}}",
+        lastEdited: "Edytowano {{count}}min temu",
+        sort: "Sortowanie",
+        moreFilters: "Więcej filtrów",
+        taskTitleHint: "Podaj nazwę zadania...",
+        listDeletionConfirmation: "Czy na pewno chcesz usunąć tą listę i wszystkie jej karty?",
+        cardDeletionConfirmation: "Czy na pewno chcesz usunąć tą kartę?",
+                
+        // card edit view
+        cardCreated: "Utworzono: {{date}}",
+        cardContentTitle: "Szczegółowy opis",
+        cardContentHint: "Wprowadź opis dla tego zadania...",
+        markAsCompleted: "Oznacz jako ukończone",
+        markAsInProgress: "Oznacz w toku",
+        markAsToDo: "Oznacz jako do zrobienia",
+        
+        // analytics
+        chartValue: "wartość: {{value}}",
+        tagFrequency: "Rozkład znaczników",
+        tagsChartTitle: "Znaczniki",
+        noTags: "Bez znacznika",
+        statusCompleted: "Ukończone",
+        statusInProgress: "W trakcie",
+        statusToDo: "Do zrobienia",
+        lastWeek: "Ostatni tydzień",
+        cardVelocity: "Aktywność",
+        statusBreakdown: "Statusy kart",
+        workload_distribution: "Obciążenie Kolumn",
+        card_aging: "Wiek Zadań",
+        locked_actionable: "Dostępne vs Zablokowane",
+        priority_split: "Podział Priorytetów",
+        effort_distribution: "Rozkład Wysiłku (Tagi)",
+
+        // accessibility
+        screenReaderMoveListLeft: "Przesuń w lewo",
+        screenReaderMoveListRight: "Przesuń w prawo",
+        screenReaderMoveCardLeft: "Przenieś do poprzedniej listy",
+        screenReaderMoveCardRight: "Przenieś do kolejnej listy",
+        screenReaderMoveCardUp: "Przesuń w górę listy",
+        screenReaderMoveCardDown: "Przesuń w dół listy",
+        screenReaderEditCardTitle: "Zmień tytuł karty",
+        screenReaderEditListTitle: "Zmień tytuł listy",
+        screenReaderConfirmTitle: "Zatwierdź zmianę tytułu",
+        screenReaderCancelTitle: "Anuluj zmianę tytułu",
+        screenReaderDeleteCard: "Usuń kartę",
+        screenReaderDeleteList: "Usun listę",
+        screenReaderEditCard: "Edytuj kartę",
+        screenReaderSetCardPriority: "Ustaw priorytet karty na {{priority}}",
+        screenReaderOpenUserSettings: "Otwórz ustawienia użytkownika",
+        screenReaderCloseUserSettings: "Zamknij ustawienia użytkownika",
+    }
+}
+
+export default pl
