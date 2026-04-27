@@ -120,7 +120,8 @@ boardsRouter.get('/:id', authMiddleware, async (req: AuthRequest, res) => {
                                 lockedByName: true,
                                 lockedAt: true,
                                 inProgress: true,
-                                tags: { select: { name: true, color: true } }
+                                tags: { select: { name: true, color: true } },
+                                members: { select: { id: true, email: true, name: true }}
                             },
                             orderBy: { order: 'asc' }
                         }
@@ -143,7 +144,8 @@ boardsRouter.get('/:id', authMiddleware, async (req: AuthRequest, res) => {
                                 id: true, content: true, description: true, isDone: true,
                                 priority: true, order: true, listId: true, lockedBy: true,
                                 lockedByName: true, lockedAt: true, inProgress: true,
-                                tags: { select: { name: true, color: true } }
+                                tags: { select: { name: true, color: true } },
+                                members: { select: { id: true, email: true, name: true }}
                             }
                         }
                     }

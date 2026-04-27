@@ -156,7 +156,7 @@ export default function Dashboard({ token, userId, onLogout }: { token: string, 
                         <span className="text-sm font-semibold text-slate-300">
                             {currentUser?.name || "User"}
                         </span>
-                        <UserSettings board={{ title: currentUser?.name || "User" }} />
+                        <UserSettings board={{ title: currentUser?.name || "User" }} user={currentUser} />
                     </div>
 
                     <button

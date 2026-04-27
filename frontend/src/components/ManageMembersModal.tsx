@@ -91,7 +91,11 @@ export default function ManageMembersModal({ boardId, token, currentUserId, onCl
                     ) : (
                         members.map(member => (
                             <div key={member.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                                <div>
+                                <img 
+                                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${member.user.name}`} 
+                                    alt={member.user.name} 
+                                    className="w-8 h-8 rounded-full shrink-0" />
+                                <div className="w-full pl-5">
                                     <p className="text-sm font-bold text-white">{member.user.name}</p>
                                     <p className="text-xs text-slate-500">{member.user.email}</p>
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mt-1 block">

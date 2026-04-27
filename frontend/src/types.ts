@@ -13,6 +13,7 @@ export interface Card {
   inProgress: boolean;
   priority: string;
   tags: TagType[];
+  members: User[];
 }
 
 export interface TagType {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Lock, Pencil, Trash, X, Check, ArrowUp, ArrowDown, Minus } from "lucide-react";
@@ -209,9 +209,10 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
           {/* Footer */}
           <div className="flex justify-between items-center mt-auto pt-2">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-700 border border-slate-600">
-                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${card.id}`} alt="avatar" />
-              </div>
+              {card.members.map(member => <div key={member.id} className="w-5 h-5 rounded-full overflow-hidden bg-slate-700 border border-slate-600">
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${member.name}`} alt={member.name} />
+              </div>)}
+              
             </div>
             <div className="flex items-center gap-2">
               {!isLockedByOther && !card.isDone && (

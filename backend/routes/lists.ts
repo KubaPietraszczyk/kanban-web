@@ -20,7 +20,7 @@ listsRouter.post('/', authMiddleware, async (req, res) => {
         const count = await prisma.list.count({ where: { boardId } });
         const list = await prisma.list.create({
             data: { title, boardId, order: count, type: type || "DEFAULT" },
-            include: { cards: { include: { tags: true } } }
+            include: { cards: { include: { tags: true, members: true } } }
         });
         io.emit('list:created', list);
         res.json(list);
@@ -38,7 +38,7 @@ listsRouter.put('/:id', authMiddleware, async (req, res) => {
         const list = await prisma.list.update({ 
             where: { id: req.params.id as string }, 
             data: { title },
-            include: { cards: { include: { tags: true } } }
+            include: { cards: { include: { tags: true, members: true } } }
         });
         io.emit('list:updated', list);
         res.json(list);

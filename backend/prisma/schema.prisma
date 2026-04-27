@@ -14,6 +14,8 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
+  assignedCards Card[]
+
   ownedBoards   Board[]       @relation("BoardOwner")
   memberships   BoardMember[]
 }
@@ -61,6 +63,7 @@ model Card {
   tags       Tag[]
   createdAt  DateTime @default(now())
   completedAt DateTime?
+  members User[]
   order      Int
   listId     String
   list       List     @relation(fields: [listId], references: [id], onDelete: Cascade)

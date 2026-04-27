@@ -1,5 +1,5 @@
 import { authMiddleware } from "../middleware/auth.js";
-import { cardSchema, cardUpdateSchema } from "../lib/zodSchemas.js";
+import { cardPatchSchema, cardSchema, cardUpdateSchema } from "../lib/zodSchemas.js";
 import prisma from "../lib/prisma.js";
 import io from "../lib/socketio.js";
 import { type AuthRequest } from "../types.js";
@@ -21,7 +21,7 @@ cardsRouter.post('/', authMiddleware, async (req, res) => {
         const count = await prisma.card.count({ where: { listId } });
         const card = await prisma.card.create({
             data: { content, listId, order: count, priority: priority || "Medium" },
-            include: { tags: true }
+            include: { tags: true, members: true }
         });
         io.emit('card:synced', card);
         res.json(card);
@@ -73,7 +73,7 @@ cardsRouter.put('/:id', authMiddleware, async (req, res) => {
         const card = await prisma.card.update({
             where: { id: req.params.id as string },
             data,
-            include: { tags: true }
+            include: { tags: true, members: true }
         });
         io.emit('card:synced', card);
         res.json(card);
@@ -81,6 +81,39 @@ cardsRouter.put('/:id', authMiddleware, async (req, res) => {
         res.status(500).json({ error: "Failed to update card" });
     }
 });
+
+cardsRouter.patch('/:cardId/members/:userId', authMiddleware, async (req, res) => {
+    try {
+        const parsed = cardPatchSchema.safeParse(req.body);
+        if (!parsed.success) return res.status(400).json({ error: "Invalid input" });
+        const { isMember } = parsed.data;
+
+        const user = await prisma.user.findUnique({ where: { id: req.params.userId as string } });
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        let membersChange = {}
+        if (isMember) {
+            membersChange = { connect: { id: req.params.userId as string } }
+        } else {
+            membersChange = { disconnect: { id: req.params.userId as string } }
+        }
+        const card = await prisma.card.update({
+                where: { id: req.params.cardId as string },
+                data: {
+                    members: membersChange
+                },
+                include: {
+                    tags: true,
+                    members: true
+                }
+            }); 
+
+        io.emit('card:synced', card);
+        res.json(card);
+    } catch (e) {
+        res.status(500).json({ error: "Failed to update card" });
+    }
+})
 
 cardsRouter.delete('/:id', authMiddleware, async (req, res) => {
     try {

@@ -11,13 +11,30 @@ usersRouter.get('/search', authMiddleware, async (req: AuthRequest, res) => {
         const query = req.query.q as string;
         if (!query || query.length < 2) return res.json([]);
 
+        const omitSelf = req.query.omitSelf === 'true';
+        let notFilter = {};
+        if (omitSelf) {
+            notFilter = { id: req.user?.userId as string };
+        }
+
+        const targetBoard = req.query.board as string;
+
         const users = await prisma.user.findMany({
             where: {
-                OR: [
-                    { name: { contains: query, mode: 'insensitive' } },
-                    { email: { contains: query, mode: 'insensitive' } }
+                AND: [
+                    {
+                        OR: [
+                            { name: { contains: query, mode: 'insensitive' } },
+                            { email: { contains: query, mode: 'insensitive' } }
+                        ],
+                        NOT: notFilter
+                    }
                 ],
-                NOT: { id: req.user?.userId as string } // Don't include self
+                memberships: {
+                    some: {
+                        boardId: targetBoard
+                    }
+                }
             },
             select: {
                 id: true,

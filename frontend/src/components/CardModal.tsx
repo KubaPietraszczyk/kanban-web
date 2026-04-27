@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { X, CheckCircle, Activity, Tag as TagIcon, BarChart2 } from "lucide-react";
-import type { Card as CardType, TagType } from "../types";
+import { X, CheckCircle, Activity, Tag as TagIcon, BarChart2, ContactRound } from "lucide-react";
+import type { Card as CardType, TagType, User, User as UserType } from "../types";
 import { useTranslation } from "react-i18next";
 import { API_URL } from "../lib/api";
+import CardMembersModal from "./CardMembersModal";
 
 interface Props {
   card: CardType;
@@ -17,11 +18,13 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
   const [description, setDescription] = useState(card.description || "");
   const [priority, setPriority] = useState(card.priority || "Medium");
   const [tags, setTags] = useState<TagType[]>(card.tags || []);
+  const [members, setMembers] = useState<UserType[]>(card.members || []);
   
   const [availableTags, setAvailableTags] = useState<TagType[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [showTagDropdown, setShowTagDropdown] = useState(false);
-  
+  const [showMemberModal, setShowMemberModal] = useState(false);
+
   const [isSaving, setIsSaving] = useState(false);
   const tagDropRef = useRef<HTMLDivElement>(null);
   const cardDescriptionRef = useRef<HTMLTextAreaElement>(null)
@@ -55,6 +58,10 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
   useEffect(() => {
     cardDescriptionRef.current?.focus()
   }, [])
+
+  useEffect(() => {
+    setMembers(card.members || []);
+  }, [card])
 
   const handleAddTag = async (tagName: string) => {
       const name = tagName.trim();
@@ -146,6 +153,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
   const filteredTags = availableTags.filter(t => t.name.toLowerCase().includes(tagInput.toLowerCase()) && !tags.find(sel => sel.id === t.id));
 
   return (
+    <>
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 cursor-auto" onClick={handleOverlayClick}>
       <div className="bg-[#1e293b] rounded-xl border border-slate-700 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
         
@@ -165,8 +173,8 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
         <div className="p-6 flex-grow overflow-y-auto flex flex-col gap-6">
             
             <div className="flex flex-wrap gap-6">
-                {/* Priority Selection */}
                 <div className="flex flex-col gap-2 flex-1 min-w-[200px]">
+                    {/* Priority Selection */}
                     <label className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2"><BarChart2 size={16}/> Priority</label>
                     <div className="flex gap-2">
                         {['Low', 'Medium', 'High'].map(p => (
@@ -180,6 +188,23 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                                     : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-700'
                                 }`}
                             >{p}</button>
+                        ))}
+                    </div> 
+                    {/* User management */}
+                    <label className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2"><ContactRound size={16} /> Members</label>
+                    <div className="flex flex-wrap gap-2 max-w-full overflow-x-scroll" id="members">
+                        <button
+                            aria-label="Assign new member"
+                            className="py-2 px-3 rounded-md text-xs font-bold transition-all border border-slate-700 text-slate-400 hover:bg-slate-700"
+                            onClick={() => setShowMemberModal(true)}
+                        >+</button>
+                        {card.members.map(member => (
+                            <img 
+                                key={member.id} 
+                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${member.name}`} 
+                                alt={member.name}
+                                title={member.name}
+                                className="w-8 h-8 rounded-full shrink-0" />
                         ))}
                     </div>
                 </div>
@@ -277,5 +302,15 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
 
       </div>
     </div>
+    ({showMemberModal && 
+        <CardMembersModal
+            boardId={boardId}
+            token={token}
+            cardId={card.id}
+            members={members}
+            onClose={() => setShowMemberModal(false)}
+        />
+    })
+    </>
   );
 }

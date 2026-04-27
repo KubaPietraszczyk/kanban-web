@@ -118,6 +118,11 @@ export function Board({ token, onLogout }: Props) {
     });
 
     socket.on("card:synced", (updatedCard: Card) => {
+      setModalCard((prev) => {
+        if (!prev) return prev;
+
+        if (prev.id === updatedCard.id) return updatedCard;
+      });
       setBoard((prev) => {
         if (!prev) return prev;
         let oldListId: string | null = null;
@@ -430,7 +435,7 @@ export function Board({ token, onLogout }: Props) {
             <span className="text-sm font-semibold text-slate-300">
               {currentUser?.name || "User"}
             </span>
-            <UserSettings board={board} />
+            <UserSettings board={board} user={currentUser} />
           </div>
 
           <button 
