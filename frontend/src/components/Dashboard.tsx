@@ -212,6 +212,8 @@ export default function Dashboard({ token, userId, onLogout }: { token: string, 
                                 {filteredBoards.map(board => (
                                     <div
                                         key={board.id}
+                                        tabIndex={0}
+                                        onKeyDown={e => {if (e.key === "Enter") navigate(`/board/${board.id}`)}}
                                         className="group relative bg-[#17171a] border border-white/5 rounded-xl hover:border-blue-500/50 transition-all hover:bg-[#1e1e24] shadow-sm flex flex-col justify-between h-40"
                                     >
                                         <div
