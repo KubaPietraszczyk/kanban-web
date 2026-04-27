@@ -15,7 +15,10 @@ app.use('/api/cards', cardsRouter);
 app.use('/api/tags', tagsRouter);
 app.use('/api/users', usersRouter);
 
+// Export for Vercel/Serverless
+export default app;
+
 const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
-    console.log(`Serwer działa z obsługą Socket.io na http://localhost:${PORT}`);
+    console.log(`Serwer działa na porcie ${PORT} z obsługą Socket.io`);
 });
