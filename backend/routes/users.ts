@@ -18,6 +18,14 @@ usersRouter.get('/search', authMiddleware, async (req: AuthRequest, res) => {
         }
 
         const targetBoard = req.query.board as string;
+        let boardFilter = {}
+        if (req.query.board !== undefined) {
+            boardFilter = {
+                some: {
+                    boardId: targetBoard
+                }
+            }   
+        }
 
         const users = await prisma.user.findMany({
             where: {
@@ -27,14 +35,10 @@ usersRouter.get('/search', authMiddleware, async (req: AuthRequest, res) => {
                             { name: { contains: query, mode: 'insensitive' } },
                             { email: { contains: query, mode: 'insensitive' } }
                         ],
-                        NOT: notFilter
+                        NOT: notFilter,
+                        memberships: boardFilter
                     }
-                ],
-                memberships: {
-                    some: {
-                        boardId: targetBoard
-                    }
-                }
+                ]
             },
             select: {
                 id: true,
