@@ -15,6 +15,7 @@ interface Props {
 }
 
 export default function CardModal({ card, token, onClose, onUpdate, socket, boardId }: Props) {
+  const [content, setContent] = useState(card.content || "");
   const [description, setDescription] = useState(card.description || "");
   const [priority, setPriority] = useState(card.priority || "Medium");
   const [tags, setTags] = useState<TagType[]>(card.tags || []);
@@ -96,7 +97,8 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
 
   const handleSave = async (markAsDone?: boolean) => {
     setIsSaving(true);
-    const updates: any = { 
+    const updates: any = {
+        content,
         description,
         priority,
         tags: tags.map(t => t.id)
@@ -158,8 +160,13 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
       <div className="bg-[#1e1f24] rounded-xl border border-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
         
         <div className="p-6 border-b border-white/10 flex justify-between items-start gap-4">
-            <div>
-                <h2 className="text-xl font-bold text-slate-100">{card.content}</h2>
+            <div className="w-full">
+                <textarea 
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && cardDescriptionRef.current.focus()}
+                    className="resize-y max-h-50 h-[38px] overflow-y-scroll text-xl w-full font-bold text-slate-100 overflow-clip bg-[#15161a] border border-[#3a3e4a] focus:border-blue-500 rounded-lg p-1 focus:outline-none transition-all"
+                />
                 <div className="flex gap-4 text-xs text-slate-400 mt-2 font-medium">
                     <span>{t("cardCreated", {date: new Date(card.createdAt).toLocaleDateString()})}</span>
                     {card.completedAt && <span className="text-emerald-400">{t("cardCompleted", {date: new Date(card.completedAt).toLocaleDateString()})}</span>}
