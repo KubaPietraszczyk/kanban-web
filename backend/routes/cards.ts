@@ -125,4 +125,37 @@ cardsRouter.delete('/:id', authMiddleware, async (req, res) => {
     }
 });
 
+cardsRouter.get("/search", authMiddleware, async (req, res) => {
+    const targetBoard = req.query.board as string;
+    let boardFilter = {}
+    if (req.query.board !== undefined) {
+        boardFilter = {
+            list: {
+                boardId: targetBoard
+            }
+        } 
+    }
+
+    const query = req.query.q as string;
+    if (!query) return res.json([]);
+
+    const cards = await prisma.card.findMany({
+        where: {
+            AND: [
+                boardFilter,
+                { 
+                    content: { contains: query, mode: 'insensitive' } 
+                }
+            ]
+        },
+        include: {
+            members: true,
+            tags: true
+        },
+        take: 10
+    })
+
+    res.json(cards)
+})
+
 export default cardsRouter

@@ -27,7 +27,7 @@ const en = {
         signUpProposal: "Don't have an account?",
 
         // board view
-        navbarSearch: "Search tasks, projects, or people...",
+        navbarSearch: "Search cards...",
         addNewCard: "Add card",
         addNewCardConfirm: "Add",
         addNewCardCancel: "Cancel",

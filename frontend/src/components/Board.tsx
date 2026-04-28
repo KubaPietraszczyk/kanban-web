@@ -41,6 +41,9 @@ export function Board({ token, onLogout }: Props) {
   const initialFetchOccurred = useRef(false);
   const socketRef = useRef<Socket | null>(null);
 
+  const [cardSearch, setCardSearch] = useState<string>("");
+  const [cardSearchResults, setCardSearchResults] = useState<Card[]>([])
+
   const { t } = useTranslation();
 
   const currentUser = parseJwt(token);
@@ -420,16 +423,61 @@ export function Board({ token, onLogout }: Props) {
     );
   }
 
+  const fetchCardSearchResults = async (query: string) => {
+    try {
+        let request = `${API_URL}/api/cards/search?q=${query}&board=${boardId}`;
+
+        const res = await fetch(request, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok) setCardSearchResults(data);
+        console.log(data)
+    } catch (err) {
+        console.error("Search error:", err);
+    }
+  }
+
   return (
     <div className="flex flex-col h-screen w-full bg-[#111113] text-slate-100 font-sans">
       {/* Top Navbar */}
       <nav className="h-14 border-b border-white/5 bg-[#17171a] flex items-center justify-between px-6 shrink-0 z-10 w-full relative">
         <div className="flex items-center gap-4">
           <div className="w-[300px] relative">
+            {/* Card Search */}
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-            <input type="text" placeholder={t("navbarSearch")} className="w-full bg-[#202127] border border-white/5 rounded-md py-1.5 pl-9 pr-4 text-sm text-slate-300 focus:outline-none focus:border-blue-500/50 transition-colors" />
+            <input 
+              type="text"
+              value={cardSearch}
+              onChange={e => {setCardSearch(e.target.value);fetchCardSearchResults(e.target.value.trim())}}
+              placeholder={t("navbarSearch")} 
+              className="w-full bg-[#202127] border border-white/5 rounded-md py-1.5 pl-9 pr-4 text-sm text-slate-300 focus:outline-none focus:border-blue-500/50 transition-colors" 
+              />
           </div>
         </div>
+        {cardSearch && (
+            <div className="absolute top-12 left-6 bg-[#1e1e24] border border-white/10 rounded-xl shadow-2xl z-[299] min-w-[300px]">
+              {cardSearchResults.length == 0 ? (
+                  <p className="text-slate-300 m-4">No results found.</p>
+                ) : (
+                  <div className="flex gap-2 overflow-hidden flex-col">
+                    {cardSearchResults.map(result => (
+                      // Card search result item
+                      <button 
+                        id={result.id}
+                        className="hover:bg-white/10 focus:bg-white/10 outline-none p-4 pb-2 pt-2 text-left font-bold text-[14px]"
+                        key={result.id}
+                        onClick={() => {
+                          setModalCard(result);
+                          setCardSearch("");
+                        }}
+                      >{result.content}</button>
+                    ))}
+                  </div>
+                )
+              }
+            </div>
+        )}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 pr-4 border-r border-white/10">
             <span className="text-sm font-semibold text-slate-300">

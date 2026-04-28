@@ -27,7 +27,7 @@ const pl = {
         signUpProposal: "Nie masz konta?",
 
         // board view
-        navbarSearch: "Szukaj zadań, projektów, osób...",
+        navbarSearch: "Szukaj kart...",
         addNewCard: "Dodaj kartę",
         addNewCardConfirm: "Dodaj",
         addNewCardCancel: "Anuluj",
