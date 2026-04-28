@@ -82,7 +82,7 @@ export default function AuthScreen({ onAuthSuccess }: { onAuthSuccess: (token: s
 
           <button
             type="submit"
-            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer"
           >
             {isLogin ? t("signIn") : t("signUp")}
           </button>
@@ -93,7 +93,7 @@ export default function AuthScreen({ onAuthSuccess }: { onAuthSuccess: (token: s
           &nbsp;
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+            className="text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
           >
             {isLogin ? t("signUp") : t("signIn")}
           </button>

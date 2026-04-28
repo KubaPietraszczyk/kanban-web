@@ -133,7 +133,7 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
     aria-label={t("screenReaderEditCard")}
     tabIndex={0}
       className={`relative group flex flex-col p-4 rounded-lg shadow-sm border 
-        ${isLockedByOther ? 'bg-[#1e1f24] border-slate-800 opacity-60 cursor-not-allowed' : card.isDone ? 'bg-[#15161a] border-[#22242b] opacity-80' : card.inProgress ? 'bg-[#291f13] border-[#a36214] opacity-90 cursor-grab' : 'bg-[#1e1f24] border-[#2a2d36] hover:border-[#3b82f6]/50 cursor-grab active:cursor-grabbing'}
+        ${isLockedByOther ? 'bg-[#1e1f24] border-slate-800 opacity-60 cursor-not-allowed' : card.isDone ? 'bg-[#15161a] border-[#22242b] opacity-80' : card.inProgress ? 'bg-[#291f13] border-[#a36214] opacity-90 cursor-grab' : 'bg-[#1e1f24] border-[#2a2d36] hover:border-accent/50 cursor-grab active:cursor-grabbing'}
         transition-all duration-200`}
     >
       {isEditing ? (
@@ -233,10 +233,10 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
                     onClick={()=>moveCardByOffset(card,0,-1)}>
                     {t("screenReaderMoveCardUp")}
                   </button>
-                  <button aria-label={t("screenReaderEditCardTitle")} onClick={() => setIsEditing(true)} className="text-slate-400 hover:text-blue-500 focus:text-blue-500 transition-colors p-1">
+                  <button aria-label={t("screenReaderEditCardTitle")} onClick={() => setIsEditing(true)} className="text-slate-400 hover:text-blue-500 focus:text-blue-500 transition-colors p-1 cursor-pointer">
                     <Pencil size={12} />
                   </button>
-                  <button aria-label={t("screenReaderDeleteCard")} onClick={handleDelete} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors p-1">
+                  <button aria-label={t("screenReaderDeleteCard")} onClick={handleDelete} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors p-1 cursor-pointer">
                     <Trash size={12} />
                   </button>
                 </div>

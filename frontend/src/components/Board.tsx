@@ -440,7 +440,7 @@ export function Board({ token, onLogout }: Props) {
 
           <button 
             onClick={onLogout}
-            className="flex items-center gap-2 px-3 py-1.5 bg-[#1e1e24] border border-white/5 hover:bg-white/5 rounded-md text-sm text-slate-400 hover:text-slate-200 transition-all font-medium"
+            className="flex items-center gap-2 px-3 py-1.5 bg-[#1e1e24] border border-white/5 hover:bg-white/5 rounded-md text-sm text-slate-400 hover:text-slate-200 transition-all font-medium cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             {t("signOut")}
@@ -491,7 +491,7 @@ export function Board({ token, onLogout }: Props) {
           <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center mt-2 mb-2">{t("addNewColumn")}</h3>
           
           {!isAddingList ? (
-            <button onClick={() => setIsAddingList(true)} className="flex items-center justify-center gap-2 w-full py-3 bg-[#1e2333]/80 hover:bg-[#252b40] border border-[#2e3752] rounded-md text-[#7896ee] transition-all font-medium text-sm shadow-sm group">
+            <button onClick={() => setIsAddingList(true)} className="flex items-center justify-center gap-2 w-full py-3 bg-[#1e2333]/80 hover:bg-[#252b40] border border-[#2e3752] rounded-md text-[#7896ee] transition-all font-medium text-sm shadow-sm group cursor-pointer">
                 <ListIcon size={16} className="text-[#6082e6] group-hover:text-[#7896ee]"/> {t("taskList")}
             </button>
           ) : (
@@ -506,10 +506,10 @@ export function Board({ token, onLogout }: Props) {
                     required
                   />
                   <div className="flex items-center gap-2 pt-1">
-                    <button type="submit" className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded transition-colors w-full">
+                    <button type="submit" className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded transition-colors w-full cursor-pointer">
                       {t("addNewCardConfirm")}
                     </button>
-                    <button type="button" onClick={() => setIsAddingList(false)} className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors w-full bg-[#111113] rounded border border-white/10 hover:border-white/20">
+                    <button type="button" onClick={() => setIsAddingList(false)} className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors w-full bg-[#111113] rounded border border-white/10 hover:border-white/20 cursor-pointer">
                       {t("addNewCardCancel")}
                     </button>
                   </div>
@@ -517,12 +517,12 @@ export function Board({ token, onLogout }: Props) {
             </div>
           )}
 
-          <button onClick={handleCreateTelemetry} className="flex items-center justify-center gap-2 w-full py-3 bg-[#162728]/80 hover:bg-[#1a2f30] border border-[#234041] rounded-md text-[#4fd1c5] transition-all font-medium text-sm shadow-sm group">
+          <button onClick={handleCreateTelemetry} className="flex items-center justify-center gap-2 w-full py-3 bg-[#162728]/80 hover:bg-[#1a2f30] border border-[#234041] rounded-md text-[#4fd1c5] transition-all font-medium text-sm shadow-sm group cursor-pointer">
               <TrendingUp size={16} className="text-[#3bbaa8] group-hover:text-[#4fd1c5]"/> {t("analyticsList")}
           </button>
           
           <div className="mt-8 flex justify-center">
-             <button onClick={onLogout} className="text-xs font-semibold text-slate-500 flex items-center gap-2 hover:text-rose-400 transition-colors"><LogOut size={14}/> {t("signOut")}</button>
+             <button onClick={onLogout} className="text-xs font-semibold text-slate-500 flex items-center gap-2 hover:text-rose-400 transition-colors cursor-pointer"><LogOut size={14}/> {t("signOut")}</button>
           </div>
         </aside>
 

@@ -50,7 +50,7 @@ export default function UserSettings({ board, user }: { board: any, user: User |
                         id="user-language" 
                         onChange={handleSelectLanguage} 
                         value={currentLanguage}
-                        className="w-full bg-[#111113] border border-white/10 rounded-lg py-1.5 px-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-blue-500 transition-all shadow-md"
+                        className="w-full bg-[#111113] border border-white/10 rounded-lg py-1.5 px-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-blue-500 transition-all shadow-md cursor-pointer"
                     >
                         <option value="en">🇺🇸 English</option>
                         <option value="pl">🇵🇱 Polski</option>

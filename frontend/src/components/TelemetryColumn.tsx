@@ -141,7 +141,7 @@ export default function TelemetryColumn({ boardCards, lists }: Props) {
         <select 
             value={chartType} 
             onChange={(e) => setChartType(Number(e.target.value))}
-            className="w-full bg-[#111113] border border-slate-700 rounded-md py-1.5 px-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-[#3b82f6] shadow-md"
+            className="w-full bg-[#111113] border border-slate-700 rounded-md py-1.5 px-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-[#3b82f6] shadow-md cursor-pointer"
         >
             <option value={1}>📊 {t("workload_distribution")}</option>
             <option value={2}>⏳ {t("card_aging")}</option>

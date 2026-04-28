@@ -161,7 +161,7 @@ export default function Dashboard({ token, userId, onLogout }: { token: string, 
 
                     <button
                         onClick={onLogout}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-[#1e1e24] border border-white/5 hover:bg-white/5 rounded-md text-sm text-slate-400 hover:text-slate-200 transition-all font-medium"
+                        className="flex items-center gap-2 px-3 py-1.5 bg-[#1e1e24] border border-white/5 hover:bg-white/5 rounded-md text-sm text-slate-400 hover:text-slate-200 transition-all font-medium cursor-pointer"
                     >
                         <LogOut className="w-4 h-4" />
                         {t("signOut")}
@@ -193,7 +193,7 @@ export default function Dashboard({ token, userId, onLogout }: { token: string, 
 
                     <button
                         onClick={() => setShowModal(true)}
-                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold text-sm transition-all shadow-lg shadow-blue-900/20"
+                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold text-sm transition-all shadow-lg shadow-blue-900/20 cursor-pointer"
                     >
                         <Plus className="w-4 h-4" />
                         {t("createBoard")}
@@ -243,21 +243,21 @@ export default function Dashboard({ token, userId, onLogout }: { token: string, 
                                                         <>
                                                             <button
                                                                 onClick={(e) => { e.stopPropagation(); setShareBoardId(board.id); setOpenMenuId(null); }}
-                                                                className="p-1.5 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors"
+                                                                className="p-1.5 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors cursor-pointer"
                                                                 title="Add user"
                                                             >
                                                                 <UserPlus className="w-4 h-4" />
                                                             </button>
                                                             <button
                                                                 onClick={(e) => { e.stopPropagation(); handleRemoveUser(board.id); setOpenMenuId(null); }}
-                                                                className="p-1.5 bg-orange-600/20 text-orange-400 hover:bg-orange-600 hover:text-white rounded-lg transition-colors"
+                                                                className="p-1.5 bg-orange-600/20 text-orange-400 hover:bg-orange-600 hover:text-white rounded-lg transition-colors cursor-pointer"
                                                                 title="Remove user"
                                                             >
                                                                 <UserMinus className="w-4 h-4" />
                                                             </button>
                                                             <button
                                                                 onClick={(e) => { e.stopPropagation(); handleDeleteBoard(board.id); setOpenMenuId(null); }}
-                                                                className="p-1.5 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded-lg transition-colors"
+                                                                className="p-1.5 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded-lg transition-colors cursor-pointer"
                                                                 title="Delete board"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
@@ -273,7 +273,7 @@ export default function Dashboard({ token, userId, onLogout }: { token: string, 
                                                             e.stopPropagation();
                                                             setOpenMenuId(openMenuId === board.id ? null : board.id);
                                                         }}
-                                                        className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 z-10 bg-[#17171a]
+                                                        className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 z-10 bg-[#17171a] cursor-pointer
                                                             ${openMenuId === board.id
                                                                 ? 'border-blue-500 bg-blue-500/10 text-blue-400 rotate-90'
                                                                 : 'border-white/10 text-slate-400 group-hover:border-blue-500/50 group-hover:text-blue-400 hover:bg-blue-500/10'

@@ -154,10 +154,10 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
 
   return (
     <>
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 cursor-auto" onClick={handleOverlayClick}>
-      <div className="bg-[#1e293b] rounded-xl border border-slate-700 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-50 bg-black-900/60 backdrop-blur-sm flex items-center justify-center p-4 cursor-auto" onClick={handleOverlayClick}>
+      <div className="bg-[#1e1f24] rounded-xl border border-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
         
-        <div className="p-6 border-b border-slate-700 flex justify-between items-start gap-4">
+        <div className="p-6 border-b border-white/10 flex justify-between items-start gap-4">
             <div>
                 <h2 className="text-xl font-bold text-slate-100">{card.content}</h2>
                 <div className="flex gap-4 text-xs text-slate-400 mt-2 font-medium">
@@ -165,7 +165,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                     {card.completedAt && <span className="text-emerald-400">{t("cardCompleted", {date: new Date(card.completedAt).toLocaleDateString()})}</span>}
                 </div>
             </div>
-            <button aria-label={t("saveAndClose")} onClick={async () => { await handleSave(); onClose(); }} className="text-slate-400 hover:text-white transition-colors bg-slate-800 p-2 rounded-lg shrink-0">
+            <button aria-label={t("saveAndClose")} onClick={async () => { await handleSave(); onClose(); }} className="text-slate-400 hover:text-white transition-colors bg-slate-800/50 p-2 rounded-lg shrink-0 cursor-pointer hover:bg-slate-700 border border-slate-700">
                 <X size={20} />
             </button>
         </div>
@@ -182,7 +182,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                                 key={p}
                                 aria-label={t("screenReaderSetCardPriority", {priority: p})}
                                 onClick={() => setPriority(p)}
-                                className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all border ${
+                                className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all border cursor-pointer ${
                                     priority === p 
                                     ? (p === 'High' ? 'bg-rose-500/20 text-rose-400 border-rose-500/50' : p === 'Medium' ? 'bg-amber-500/20 text-amber-400 border-amber-500/50' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50')
                                     : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-700'
@@ -195,7 +195,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                     <div className="flex flex-wrap gap-2 max-w-full overflow-x-scroll" id="members">
                         <button
                             aria-label="Assign new member"
-                            className="py-2 px-3 rounded-md text-xs font-bold transition-all border border-slate-700 text-slate-400 hover:bg-slate-700"
+                            className="py-2 px-3 rounded-md bg-slate-800/50 text-xs font-bold transition-all border border-slate-700 text-slate-400 hover:bg-slate-700 cursor-pointer"
                             onClick={() => setShowMemberModal(true)}
                         >+</button>
                         {card.members.map(member => (
@@ -213,14 +213,16 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                 <div className="flex flex-col gap-2 flex-1 min-w-[200px]" ref={tagDropRef}>
                     <label className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2"><TagIcon size={16}/> Tags</label>
                     
-                    <div className="flex flex-wrap gap-2 mb-1">
-                        {tags.map(t => (
-                            <span key={t.id} className="bg-[#1c2c4d] text-[#6082e6] border border-[#2e4073] px-2 py-1 flex items-center gap-1 rounded text-xs font-bold">
-                                {t.name}
-                                <button onClick={() => handleRemoveTag(t.id)} className="hover:text-rose-400 ml-1"><X size={12}/></button>
-                            </span>
-                        ))}
-                    </div>
+                    {tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-1">
+                            {tags.map(t => (
+                                <span key={t.id} className="bg-[#1c2c4d] text-[#6082e6] border border-[#2e4073] px-2 py-1 flex items-center gap-1 rounded text-xs font-bold">
+                                    {t.name}
+                                    <button onClick={() => handleRemoveTag(t.id)} className="hover:text-rose-400 ml-1 cursor-pointer"><X size={12}/></button>
+                                </span>
+                            ))}
+                        </div>
+                    )}
 
                     <div className="relative">
                         <input
@@ -235,7 +237,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                                 }
                             }}
                             placeholder="Type to search or create tag..."
-                            className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-slate-200 text-sm focus:outline-none focus:border-blue-500"
+                            className="w-full px-3 py-2 bg-[#15161a] border border-slate-700 rounded-lg text-slate-200 text-sm focus:outline-none focus:border-blue-500 transition-all"
                         />
                         {showTagDropdown && tagInput.trim() && (
                             <div className="absolute top-full mt-1 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-xl overflow-hidden z-20">
@@ -262,7 +264,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Dodaj więcej szczegółowych informacji do tego zadania..."
-                    className="w-full min-h-[150px] p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
+                    className="w-full min-h-[150px] p-4 bg-[#15161a] border border-[#3a3e4a] focus:border-blue-500 rounded-lg text-slate-200 focus:outline-none transition-all resize-none"
                 />
             </div>
         </div>
@@ -271,7 +273,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
             <button 
                 onClick={async () => { await handleSave(); onClose(); }} 
                 disabled={isSaving}
-                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors border border-slate-600"
+                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors border border-slate-600 cursor-pointer"
             >
                 {t("saveAndClose")}
             </button>
@@ -280,7 +282,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
               <button 
                   onClick={handleSetInProgress}
                   disabled={isSaving} 
-                  className="flex items-center gap-2 px-5 py-2 text-sm font-medium rounded-lg transition-all shadow-lg bg-amber-500 hover:bg-amber-400 text-white shadow-amber-900/20 border border-amber-500"
+                  className="flex items-center gap-2 px-5 py-2 text-sm font-medium rounded-lg transition-all shadow-lg bg-amber-500 hover:bg-amber-400 text-white shadow-amber-900/20 border border-amber-500 cursor-pointer"
               >
                   <Activity size={18} />
                   {t("markAsInProgress")}
@@ -290,7 +292,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
             <button 
                 onClick={() => handleSave(!card.isDone)}
                 disabled={isSaving} 
-                className={`flex items-center gap-2 px-5 py-2 text-sm font-medium rounded-lg transition-all shadow-lg
+                className={`flex items-center gap-2 px-5 py-2 text-sm font-medium rounded-lg transition-all shadow-lg cursor-pointer
                     ${card.isDone 
                         ? 'bg-slate-700 hover:bg-rose-600 text-slate-200 hover:text-white border border-slate-600 hover:border-rose-500' 
                         : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20 border border-emerald-500'}`}

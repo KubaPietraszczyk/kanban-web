@@ -87,7 +87,7 @@ export default function UserSearch({boardId, token, onAddUser, omitSelf = false,
                             </div>
                             <button 
                                 onClick={() => onAddUser(user.id)}
-                                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-xs font-bold transition-all opacity-0 group-hover:opacity-100 shadow-lg shadow-blue-900/20"
+                                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-xs font-bold transition-all opacity-0 group-hover:opacity-100 shadow-lg shadow-blue-900/20 cursor-pointer"
                             >
                                 {t("addNewCardConfirm")}
                             </button>

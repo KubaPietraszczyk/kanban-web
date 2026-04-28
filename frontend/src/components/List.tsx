@@ -130,10 +130,10 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
               onChange={(e) => setEditedTitle(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleUpdateTitle()}
             />
-            <button aria-label={t("screenReaderConfirmTitle")} onClick={handleUpdateTitle} className="text-[#3bbaa8] hover:text-[#4fd1c5] focus:text-[#4fd1c5]">
+            <button aria-label={t("screenReaderConfirmTitle")} onClick={handleUpdateTitle} className="text-[#3bbaa8] hover:text-[#4fd1c5] focus:text-[#4fd1c5] cursor-pointer">
                 <Check size={16} />
             </button>
-            <button aria-label={t("screenReaderCancelTitle")} onClick={() => { setIsEditingTitle(false); setEditedTitle(list.title); }} className="text-slate-400 hover:text-slate-200 focus:text-slate-200">
+            <button aria-label={t("screenReaderCancelTitle")} onClick={() => { setIsEditingTitle(false); setEditedTitle(list.title); }} className="text-slate-400 hover:text-slate-200 focus:text-slate-200 cursor-pointer">
                 <X size={16} />
             </button>
           </div>
@@ -155,10 +155,10 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
                 {t("screenReaderMoveListRight")}
               </button>
               <div className="opacity-60 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                <button aria-label={t("screenReaderEditListTitle")} onClick={() => setIsEditingTitle(true)} className="text-slate-400 hover:text-blue-500 focus:text-blue-500 transition-colors">
+                <button aria-label={t("screenReaderEditListTitle")} onClick={() => setIsEditingTitle(true)} className="text-slate-400 hover:text-blue-500 focus:text-blue-500 transition-colors cursor-pointer">
                     <Pencil size={14} />
                 </button>
-                <button aria-label={t("screenReaderDeleteList")} onClick={handleDeleteList} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors">
+                <button aria-label={t("screenReaderDeleteList")} onClick={handleDeleteList} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors cursor-pointer">
                     <Trash size={14} />
                 </button>
               </div>
