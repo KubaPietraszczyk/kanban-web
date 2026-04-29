@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Lock, Pencil, Trash, X, Check, ArrowUp, ArrowDown, Minus } from "lucide-react";
+import { Lock, Trash, Check, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import type { BoardActions, Card as CardType } from "../types";
 import { useTranslation } from "react-i18next";
 import ConfirmModal from "./ConfirmModal";
@@ -19,7 +19,7 @@ interface Props {
 export default function Card({ card, currentSocketId, token, onUpdate, onOpenModal, actions }: Props) {
   // Task/Card jest zablokowany jeśli ma ustalone lockedBy i to lockedBy nie jest naszym socketID
   const isLockedByOther = card.lockedBy !== null && card.lockedBy !== currentSocketId;
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const { t } = useTranslation();

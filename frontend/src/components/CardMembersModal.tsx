@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import AlertModal from "./AlertModal";
@@ -15,7 +15,7 @@ interface CardMembersModalProps {
 }
 
 export default function CardMembersModal({ boardId, token, cardId, members, onClose }: CardMembersModalProps) {
-    const { t } = useTranslation();
+    useTranslation();
 
     // Modal states
     const [alertConfig, setAlertConfig] = useState<{title: string, message: string} | null>(null);
@@ -23,7 +23,7 @@ export default function CardMembersModal({ boardId, token, cardId, members, onCl
     const handleAddUser = async (userId: string) => {
         // Assign user to card
         try {
-            const res = await fetch(`${API_URL}/api/cards/${cardId}/members/${userId}`, {
+            await fetch(`${API_URL}/api/cards/${cardId}/members/${userId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ isMember: true }),
@@ -35,7 +35,7 @@ export default function CardMembersModal({ boardId, token, cardId, members, onCl
     const handleRemove = async (userId: string) => {
         // Remove user from card
         try {
-            const res = await fetch(`${API_URL}/api/cards/${cardId}/members/${userId}`, {
+            await fetch(`${API_URL}/api/cards/${cardId}/members/${userId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ isMember: false }),

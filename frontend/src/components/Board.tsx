@@ -17,7 +17,7 @@ import CardComp from "./Card";
 import CardModal from "./CardModal";
 import ShareModal from "./ShareModal";
 import type { BoardActions, BoardType, Card, ListType } from "../types";
-import { LogOut, Search, LayoutGrid, X, ArrowDownUp, Filter, MoreHorizontal, List as ListIcon, TrendingUp, UserPlus } from "lucide-react";
+import { LogOut, Search, LayoutGrid, MoreHorizontal, List as ListIcon, TrendingUp, UserPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import UserSettings from "./UserSettings";
 import { parseJwt } from "../lib/jwt";
@@ -125,6 +125,7 @@ export function Board({ token, onLogout }: Props) {
         if (!prev) return prev;
 
         if (prev.id === updatedCard.id) return updatedCard;
+        return prev;
       });
       setBoard((prev) => {
         if (!prev) return prev;

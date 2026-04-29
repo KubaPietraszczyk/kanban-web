@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { X, CheckCircle, Activity, Tag as TagIcon, BarChart2, ContactRound } from "lucide-react";
-import type { Card as CardType, TagType, User, User as UserType } from "../types";
+import type { Card as CardType, TagType, User as UserType } from "../types";
 import { useTranslation } from "react-i18next";
 import { API_URL } from "../lib/api";
 import CardMembersModal from "./CardMembersModal";
@@ -164,7 +164,7 @@ export default function CardModal({ card, token, onClose, onUpdate, socket, boar
                 <textarea 
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && cardDescriptionRef.current.focus()}
+                    onKeyDown={(e) => e.key === 'Enter' && cardDescriptionRef.current?.focus()}
                     className="resize-y max-h-50 h-[38px] overflow-y-scroll text-xl w-full font-bold text-slate-100 overflow-clip bg-[#15161a] border border-[#3a3e4a] focus:border-blue-500 rounded-lg p-1 focus:outline-none transition-all"
                 />
                 <div className="flex gap-4 text-xs text-slate-400 mt-2 font-medium">

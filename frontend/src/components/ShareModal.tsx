@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { X, Search, UserPlus } from "lucide-react";
+import { useState } from "react";
+import { X, UserPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import AlertModal from "./AlertModal";
 import { API_URL } from "../lib/api";

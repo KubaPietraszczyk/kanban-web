@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import { useTranslation } from "react-i18next";
 import type { User } from "../types";
 
-export default function UserSettings({ board, user }: { board: any, user: User | null }) {
+export default function UserSettings({ user }: { board: any, user: User | null }) {
     const { t, i18n } = useTranslation();
     const [settingsVisible, setSettingsVisible] = useState(false)
     const componentRef = useRef<HTMLDivElement>(null);
