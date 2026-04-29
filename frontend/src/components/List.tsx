@@ -148,12 +148,6 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
                   {cards.length}
                 </span>
               </div>
-              <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only" onClick={() => moveListByOffset(list.id, -1)}>
-                {t("screenReaderMoveListLeft")}
-              </button>
-              <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only" onClick={() => moveListByOffset(list.id, 1)}>
-                {t("screenReaderMoveListRight")}
-              </button>
               <div className="opacity-60 group-hover:opacity-100 transition-opacity flex items-center gap-2">
                 <button aria-label={t("screenReaderEditListTitle")} onClick={() => setIsEditingTitle(true)} className="text-slate-400 hover:text-blue-500 focus:text-blue-500 transition-colors cursor-pointer">
                     <Pencil size={14} />
@@ -161,7 +155,14 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
                 <button aria-label={t("screenReaderDeleteList")} onClick={handleDeleteList} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors cursor-pointer">
                     <Trash size={14} />
                 </button>
+                <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only" onClick={() => moveListByOffset(list.id, -1)}>
+                  {t("screenReaderMoveListLeft")}
+                </button>
+                <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only" onClick={() => moveListByOffset(list.id, 1)}>
+                  {t("screenReaderMoveListRight")}
+                </button>
               </div>
+              
           </div>
         )}
       </div>
