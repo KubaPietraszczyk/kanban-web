@@ -173,7 +173,7 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
         </div>
         <div className="flex items-center gap-2">
           {!isLockedByOther && !card.isDone && (
-            <div className="opacity-60 group-hover:opacity-100 transition-opacity flex gap-1 mr-1" onClick={e => e.stopPropagation()}>
+            <div className="opacity-60 group-hover:opacity-100 transition-opacity flex gap-1" onClick={e => e.stopPropagation()}>
               <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only"
                 onClick={()=>moveCardByOffset(card,-1,0)}>
                 {t("screenReaderMoveCardLeft")}
@@ -195,9 +195,6 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
               </button>
             </div>
           )}
-          <span className="text-[9px] text-slate-400 font-medium">
-            {card.completedAt ? t("cardCompleted", { date: new Date(card.completedAt).toLocaleDateString() }) : t("lastEdited", { count: "10" })} {/* TODO: hardcoded value */}
-          </span>
         </div>
       </div>
 

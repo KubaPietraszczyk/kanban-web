@@ -432,7 +432,6 @@ export function Board({ token, onLogout }: Props) {
         });
         const data = await res.json();
         if (res.ok) setCardSearchResults(data);
-        console.log(data)
     } catch (err) {
         console.error("Search error:", err);
     }
@@ -510,15 +509,8 @@ export function Board({ token, onLogout }: Props) {
         <div className="flex justify-between items-end flex-wrap gap-4">
           <div className="flex flex-col gap-3">
              <h1 className="text-3xl font-bold text-white tracking-tight">{board?.title}</h1>
-             <div className="flex gap-2">
-                <span className="text-xs font-medium bg-[#1e1e24] border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 text-slate-400 hover:text-slate-200 cursor-pointer transition-colors shadow-sm tracking-wide">{t("yearFilter", {filter: "2026"})} <X size={12}/></span>
-                <span className="text-xs font-medium bg-[#1e1e24] border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 text-slate-400 hover:text-slate-200 cursor-pointer transition-colors shadow-sm tracking-wide">{t("taskProgressFilter", {filter: "All"})} <X size={12}/></span>
-                <span className="text-xs font-medium bg-[#1e1e24] border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 text-slate-400 hover:text-slate-200 cursor-pointer transition-colors shadow-sm tracking-wide">{t("statusFilter", {filter: "All"})} <X size={12}/></span>
-             </div>
           </div>
           <div className="flex gap-2 items-center">
-             <button className="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-[#1e1e24] border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2"><ArrowDownUp size={14}/> {t("sort")}</button>
-             <button className="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-[#1e1e24] border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2"><Filter size={14}/> {t("moreFilters")}</button>
              {board.ownerId === currentUser?.userId && (
                <button 
                   onClick={() => setShowShareModal(true)}
