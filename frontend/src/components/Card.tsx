@@ -172,9 +172,7 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
           
         </div>
         <div className="flex items-center gap-2">
-          {!isLockedByOther && !card.isDone && (
-            <div className="opacity-60 group-hover:opacity-100 transition-opacity flex gap-1" onClick={e => e.stopPropagation()}>
-              <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only"
+          <button className="text-slate-300 text-[15px] sr-only focus:not-sr-only"
                 onClick={()=>moveCardByOffset(card,-1,0)}>
                 {t("screenReaderMoveCardLeft")}
               </button>
@@ -190,6 +188,9 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
                 onClick={()=>moveCardByOffset(card,0,-1)}>
                 {t("screenReaderMoveCardUp")}
               </button>
+          {!isLockedByOther && !card.isDone && (
+            <div className="opacity-60 group-hover:opacity-100 transition-opacity flex gap-1" onClick={e => e.stopPropagation()}>
+              
               <button aria-label={t("screenReaderDeleteCard")} onClick={handleDelete} className="text-slate-400 hover:text-rose-400 focus:text-rose-400 transition-colors p-1 cursor-pointer">
                 <Trash size={12} />
               </button>
