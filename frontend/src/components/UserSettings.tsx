@@ -35,7 +35,7 @@ export default function UserSettings({ user }: { board: any, user: User | null }
              onClick={() => setSettingsVisible(!settingsVisible)} 
              className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-sm overflow-hidden border border-slate-600 shadow-sm opacity-80 hover:opacity-100 transition-opacity cursor-pointer"
             >
-                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || "user"}`} alt="your avatar" />
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.name || "user")}`} alt="your avatar" />
             </button>
 
             {/* settings menu */}

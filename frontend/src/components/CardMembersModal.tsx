@@ -57,12 +57,12 @@ export default function CardMembersModal({ boardId, token, cardId, members, onCl
                 </div>
                 <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar mb-4">
                     {members.length === 0 ? (
-                        <p className="text-center text-slate-500 py-4">No members found</p>
+                        <p className="text-center text-slate-500 py-4">{t("noMembersFound")}</p>
                     ) : (
                         members.map(member => (
                             <div key={member.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                                 <img 
-                                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${member.name}`} 
+                                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(member.name)}`} 
                                     alt={member.name} 
                                     className="w-8 h-8 rounded-full shrink-0" />
                                 <div className="w-full pl-5">

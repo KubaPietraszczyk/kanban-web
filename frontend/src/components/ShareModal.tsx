@@ -68,7 +68,7 @@ export default function ShareModal({ boardId, token, onClose }: ShareModalProps)
 
             <AlertModal 
                 isOpen={!!alertMessage}
-                title="Info"
+                title={t("info")}
                 message={alertMessage || ""}
                 onClose={() => setAlertMessage(null)}
             />
