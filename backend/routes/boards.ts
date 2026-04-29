@@ -111,6 +111,7 @@ boardsRouter.get('/:id', authMiddleware, async (req: AuthRequest, res) => {
                             select: {
                                 id: true,
                                 content: true,
+                                createdAt: true,
                                 description: true,
                                 isDone: true,
                                 priority: true,

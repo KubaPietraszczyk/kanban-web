@@ -515,7 +515,7 @@ export function Board({ token, onLogout }: Props) {
              {board.ownerId === currentUser?.userId && (
                <button 
                   onClick={() => setShowShareModal(true)}
-                  className="px-3 py-1.5 rounded-md text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all flex items-center gap-2 shadow-lg shadow-blue-900/20"
+                  className="px-3 py-1.5 rounded-md text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all flex items-center gap-2 shadow-lg shadow-blue-900/20 cursor-pointer"
                >
                   <UserPlus size={14}/> {t("share")}
                </button>

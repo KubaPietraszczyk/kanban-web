@@ -33,11 +33,15 @@ listsRouter.put('/:id', authMiddleware, async (req, res) => {
     try {
         const parsed = listUpdateSchema.safeParse(req.body);
         if (!parsed.success) return res.status(400).json({ error: "Invalid input" });
-        const { title } = parsed.data;
+        const { title, color } = parsed.data;
+
+        let data: any = {}
+        if (title !== undefined) data.title = title;
+        if (color !== undefined) data.color = color;
 
         const list = await prisma.list.update({ 
             where: { id: req.params.id as string }, 
-            data: { title },
+            data,
             include: { cards: { include: { tags: true, members: true } } }
         });
         io.emit('list:updated', list);

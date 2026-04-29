@@ -5,7 +5,10 @@ export const loginSchema = z.object({ email: z.string().email(), password: z.str
 export const tagSchema = z.object({ name: z.string().min(1), color: z.string().optional() });
 export const listSchema = z.object({ title: z.string().min(1), boardId: z.string().uuid(), type: z.string().optional() });
 export const cardSchema = z.object({ content: z.string().min(1), listId: z.string().uuid(), priority: z.string().optional() });
-export const listUpdateSchema = z.object({ title: z.string().min(1) });
+export const listUpdateSchema = z.object({ 
+    title: z.string().min(1).optional(), 
+    color: z.number().optional()
+});
 export const cardUpdateSchema = z.object({ 
     content: z.string().optional(), 
     description: z.string().nullable().optional(), 
