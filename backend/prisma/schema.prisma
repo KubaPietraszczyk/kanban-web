@@ -52,6 +52,7 @@ model List {
   board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId String
   cards   Card[]
+  color   Int @default(0)
 }
 
 model Card {

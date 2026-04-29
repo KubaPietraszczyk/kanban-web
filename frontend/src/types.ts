@@ -29,6 +29,7 @@ export interface ListType {
   type: string;
   boardId: string;
   cards: Card[];
+  color: number;
 }
 
 export interface BoardType {

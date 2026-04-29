@@ -21,12 +21,22 @@ interface Props {
   actions: BoardActions
 }
 
+const LIST_COLORS = [
+  "#6082e6", // blue
+  "#3bdaa8", // green
+  "#d4b331", // yellow
+  "#ba3b3b", // red
+  "#9f3acd", // purple
+  "#cdcdcd", // white
+];
+
 export default function List({ list, cards, currentSocketId, token, onAddCard, onOpenModal, boardCards, allLists, actions }: Props) {
   const [isAdding, setIsAdding] = useState(false);
   const [newCardContent, setNewCardContent] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(list.title);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [color, setColor] = useState<number>(list.color);
 
   const { t } = useTranslation();
 
@@ -107,6 +117,25 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
     }
   };
 
+  const handleChangeColor = async () => {
+    const newColor = (color+1) % LIST_COLORS.length;
+    console.log()
+    setColor(newColor);
+    
+    try {
+      await fetch(`${API_URL}/api/lists/${list.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ color: newColor })
+      });
+    } catch (e) {
+      console.error("Failed to change color", e);
+    }
+  }
+
   return (
     <div 
       ref={setNodeRef}
@@ -140,9 +169,13 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
         ) : (
           <div className="flex items-center justify-between flex-grow">
               <div className="flex items-center gap-2">
-                {list.type !== "TELEMETRY" && (
-                   <span className={`w-2.5 h-2.5 rounded-full flex-none ${list.title.toLowerCase().includes("done") ? "bg-[#3bbaa8]" : "bg-[#6082e6]"}`}></span>
-                )}
+                {/* color switcher */}
+                <button 
+                  aria-label="change list color" 
+                  className={`w-2.5 h-2.5 rounded-full flex-none cursor-pointer`}
+                  style={{backgroundColor: LIST_COLORS[color]}}
+                  onClick={() => handleChangeColor()}
+                ></button>
                 <h2 className="font-semibold text-[15px] text-slate-200 max-h-52 overflow-y-scroll">{list.title}</h2>
                 <span className="bg-[#24272c] text-[11px] font-bold px-2 py-0.5 rounded flex items-center justify-center text-slate-400">
                   {cards.length}
