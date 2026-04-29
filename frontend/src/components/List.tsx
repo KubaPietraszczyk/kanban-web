@@ -141,9 +141,9 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
           <div className="flex items-center justify-between flex-grow">
               <div className="flex items-center gap-2">
                 {list.type !== "TELEMETRY" && (
-                   <span className={`w-2.5 h-2.5 rounded-full ${list.title.toLowerCase().includes("done") ? "bg-[#3bbaa8]" : "bg-[#6082e6]"}`}></span>
+                   <span className={`w-2.5 h-2.5 rounded-full flex-none ${list.title.toLowerCase().includes("done") ? "bg-[#3bbaa8]" : "bg-[#6082e6]"}`}></span>
                 )}
-                <h2 className="font-semibold text-[15px] text-slate-200">{list.title}</h2>
+                <h2 className="font-semibold text-[15px] text-slate-200 max-h-52 overflow-y-scroll">{list.title}</h2>
                 <span className="bg-[#24272c] text-[11px] font-bold px-2 py-0.5 rounded flex items-center justify-center text-slate-400">
                   {cards.length}
                 </span>
