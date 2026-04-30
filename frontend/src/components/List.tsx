@@ -19,7 +19,7 @@ interface Props {
   boardCards?: Card[];
   allLists?: ListType[];
   actions: BoardActions;
-  confettiEnabled?: boolean;
+
 }
 
 const LIST_COLORS = [
@@ -31,7 +31,7 @@ const LIST_COLORS = [
   "#cdcdcd", // white
 ];
 
-export default function List({ list, cards, currentSocketId, token, onAddCard, onOpenModal, boardCards, allLists, actions, confettiEnabled }: Props) {
+export default function List({ list, cards, currentSocketId, token, onAddCard, onOpenModal, boardCards, allLists, actions }: Props) {
   const [isAdding, setIsAdding] = useState(false);
   const [newCardContent, setNewCardContent] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -213,7 +213,7 @@ export default function List({ list, cards, currentSocketId, token, onAddCard, o
           <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 custom-scrollbar">
             <SortableContext items={cards.map(t => t.id)} strategy={verticalListSortingStrategy}>
               {cards.map(card => (
-                <CardComp key={card.id} card={card} currentSocketId={currentSocketId} token={token} onUpdate={onAddCard} onOpenModal={onOpenModal!} actions={actions} confettiEnabled={confettiEnabled} />
+                <CardComp key={card.id} card={card} currentSocketId={currentSocketId} token={token} onUpdate={onAddCard} onOpenModal={onOpenModal!} actions={actions} />
               ))}
             </SortableContext>
           </div>

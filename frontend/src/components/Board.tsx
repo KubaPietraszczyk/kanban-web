@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import UserSettings from "./UserSettings";
 import { parseJwt } from "../lib/jwt";
 import { API_URL } from "../lib/api";
-import confetti from 'canvas-confetti';
+
 
 interface Props {
   token: string;
@@ -43,7 +43,7 @@ export function Board({ token, onLogout }: Props) {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [filterPriority, setFilterPriority] = useState<string[]>([]);
-  const [confettiEnabled, setConfettiEnabled] = useState(false);
+
   const [showClearCompletedConfirm, setShowClearCompletedConfirm] = useState(false);
   const [isEditingBoardTitle, setIsEditingBoardTitle] = useState(false);
   const [editedBoardTitle, setEditedBoardTitle] = useState("");
@@ -514,20 +514,8 @@ export function Board({ token, onLogout }: Props) {
   return (
     <div className="flex flex-col h-screen w-full bg-[#111113] text-slate-100 font-sans">
       {/* Top Navbar */}
-      <nav className="h-14 border-b border-white/5 bg-[#17171a] flex items-center justify-between px-6 shrink-0 z-10 w-full relative">
-        <div className="flex items-center gap-4">
-          <div className="w-[300px] relative">
-            {/* Card Search */}
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-            <input
-              type="text"
-              value={cardSearch}
-              onChange={e => { setCardSearch(e.target.value); fetchCardSearchResults(e.target.value.trim()) }}
-              placeholder={t("navbarSearch")}
-              className="w-full bg-[#202127] border border-white/5 rounded-md py-1.5 pl-9 pr-4 text-[15px] text-slate-300 focus:outline-none focus:border-blue-500/50 transition-colors"
-            />
-          </div>
-        </div>
+      <nav className="h-14 border-b border-white/5 bg-[#17171a] flex items-center justify-end px-6 shrink-0 z-10 w-full relative">
+
         {cardSearch && (
           <div className="absolute top-12 left-6 bg-[#1e1e24] border border-white/10 rounded-xl shadow-2xl z-[299] min-w-[300px]">
             {cardSearchResults.length == 0 ? (
@@ -563,7 +551,7 @@ export function Board({ token, onLogout }: Props) {
             onClick={onLogout}
             className="flex items-center gap-2 px-3 py-1.5 bg-[#1e1e24] border border-white/5 hover:bg-white/5 rounded-md text-[15px] text-slate-400 hover:text-slate-200 transition-all font-medium cursor-pointer"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4 translate-y-[2px]" />
             {t("signOut")}
           </button>
         </div>
@@ -647,17 +635,7 @@ export function Board({ token, onLogout }: Props) {
                     {showSidebar ? t("hideSidebar") : t("showSidebar")}
                   </button>
 
-                  <div className="w-full px-4 py-2.5 flex items-center justify-between group">
-                    <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
-                      {t("confettiEffects") || "Confetti Effects"}
-                    </span>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setConfettiEnabled(!confettiEnabled); }}
-                      className={`w-9 h-5 rounded-full relative transition-all duration-300 cursor-pointer ${confettiEnabled ? 'bg-blue-600 shadow-lg shadow-blue-900/30' : 'bg-slate-700'}`}
-                    >
-                      <div className={`absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${confettiEnabled ? 'translate-x-4' : ''}`} />
-                    </button>
-                  </div>
+
 
                   <div className="h-px bg-white/5 my-2" />
                   <div className="px-4 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t("filters") || "Filters"}</div>
@@ -765,7 +743,7 @@ export function Board({ token, onLogout }: Props) {
                     cards={filterPriority.length > 0 ? list.cards.filter(c => filterPriority.includes(c.priority)) : list.cards}
                     currentSocketId={currentUser?.userId}
                     token={token}
-                    confettiEnabled={confettiEnabled}
+
                     onAddCard={() => { }}
                     onOpenModal={setModalCard}
                     boardCards={board?.lists.flatMap(l => l.cards) || []}

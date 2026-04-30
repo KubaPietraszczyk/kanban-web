@@ -6,7 +6,7 @@ import type { BoardActions, Card as CardType } from "../types";
 import { useTranslation } from "react-i18next";
 import ConfirmModal from "./ConfirmModal";
 import { API_URL } from "../lib/api";
-import confetti from 'canvas-confetti';
+
 
 interface Props {
   card: CardType;
@@ -15,10 +15,10 @@ interface Props {
   onUpdate: () => void;
   onOpenModal: (card: CardType) => void;
   actions: BoardActions;
-  confettiEnabled?: boolean;
+
 }
 
-export default function Card({ card, currentSocketId, token, onUpdate, onOpenModal, actions, confettiEnabled }: Props) {
+export default function Card({ card, currentSocketId, token, onUpdate, onOpenModal, actions }: Props) {
   // Task/Card jest zablokowany jeśli ma ustalone lockedBy i to lockedBy nie jest naszym socketID
   const isLockedByOther = card.lockedBy !== null && card.lockedBy !== currentSocketId;
   const [isEditing] = useState(false);
@@ -42,14 +42,7 @@ export default function Card({ card, currentSocketId, token, onUpdate, onOpenMod
         body: JSON.stringify({ isDone: newDoneState })
       });
 
-      if (newDoneState && confettiEnabled !== false) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#10b981', '#3b82f6', '#4fd1c5']
-        });
-      }
+
 
       onUpdate();
     } catch {
