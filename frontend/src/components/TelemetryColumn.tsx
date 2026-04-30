@@ -91,16 +91,7 @@ export default function TelemetryColumn({ boardCards, lists }: Props) {
       }
   };
 
-  const getActiveChartTitle = () => {
-      switch(chartType) {
-          case 1: return t("workload_distribution");
-          case 2: return t("card_aging");
-          case 3: return t("locked_actionable");
-          case 4: return t("priority_split");
-          case 5: return t("effort_distribution");
-          default: return "";
-      }
-  };
+
 
   // 6. Card Velocity (Static Bottom Chart)
   const days = ["S", "M", "T", "W", "T", "F", "S"];

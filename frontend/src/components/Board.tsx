@@ -18,7 +18,7 @@ import CardModal from "./CardModal";
 import ShareModal from "./ShareModal";
 import ConfirmModal from "./ConfirmModal";
 import type { BoardActions, BoardType, Card, ListType } from "../types";
-import { LogOut, Search, LayoutGrid, MoreHorizontal, List as ListIcon, TrendingUp, UserPlus, Trash2, Filter, BarChart3, Pencil } from "lucide-react";
+import { LogOut, LayoutGrid, MoreHorizontal, List as ListIcon, TrendingUp, UserPlus, Trash2, Filter, Pencil } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import UserSettings from "./UserSettings";
 import { parseJwt } from "../lib/jwt";
@@ -497,19 +497,7 @@ export function Board({ token, onLogout }: Props) {
     );
   }
 
-  const fetchCardSearchResults = async (query: string) => {
-    try {
-      let request = `${API_URL}/api/cards/search?q=${query}&board=${boardId}`;
 
-      const res = await fetch(request, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (res.ok) setCardSearchResults(data);
-    } catch (err) {
-      console.error("Search error:", err);
-    }
-  }
 
   return (
     <div className="flex flex-col h-screen w-full bg-[#111113] text-slate-100 font-sans">
