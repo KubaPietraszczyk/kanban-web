@@ -51,8 +51,7 @@ export function Board({ token, onLogout }: Props) {
   const initialFetchOccurred = useRef(false);
   const socketRef = useRef<Socket | null>(null);
 
-  const [cardSearch, setCardSearch] = useState<string>("");
-  const [cardSearchResults, setCardSearchResults] = useState<Card[]>([])
+
 
   const { t } = useTranslation();
 
@@ -504,29 +503,7 @@ export function Board({ token, onLogout }: Props) {
       {/* Top Navbar */}
       <nav className="h-14 border-b border-white/5 bg-[#17171a] flex items-center justify-end px-6 shrink-0 z-10 w-full relative">
 
-        {cardSearch && (
-          <div className="absolute top-12 left-6 bg-[#1e1e24] border border-white/10 rounded-xl shadow-2xl z-[299] min-w-[300px]">
-            {cardSearchResults.length == 0 ? (
-              <p className="text-slate-300 m-4">{t("noResultsFound")}</p>
-            ) : (
-              <div className="flex gap-2 overflow-hidden flex-col">
-                {cardSearchResults.map(result => (
-                  // Card search result item
-                  <button
-                    id={result.id}
-                    className="hover:bg-white/10 focus:bg-white/10 outline-none p-4 pb-2 pt-2 text-left font-bold text-[14px] truncate w-full"
-                    key={result.id}
-                    onClick={() => {
-                      setModalCard(result);
-                      setCardSearch("");
-                    }}
-                  >{result.content}</button>
-                ))}
-              </div>
-            )
-            }
-          </div>
-        )}
+
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 pr-4 border-r border-white/10">
             <span className="text-[15px] font-semibold text-slate-300">
